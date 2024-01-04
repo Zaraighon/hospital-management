@@ -22,7 +22,7 @@ def signin_admin():
         username = request.form.get('username')
         password = request.form.get('password')
 
-        user = utils.check_userlogin(username=username,
+        user = utils.check_adminlogin(username=username,
                                  password=password,)
         if user:
             login_user(user=user)

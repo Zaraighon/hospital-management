@@ -19,7 +19,7 @@ def check_userlogin(username, password,):
                                  User.password.__eq__(password),).first()
 
 
-def check_nurselogin(username, password, role=UserRoleEnum.NURSE):
+def check_adminlogin(username, password, role=UserRoleEnum.ADMIN):
     if username and password:
         password = hashlib.md5(password.strip().encode('utf-8')).hexdigest()
 
