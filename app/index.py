@@ -93,6 +93,9 @@ def user_load(user_id):
     return utils.get_user_by_id(user_id=user_id)
 
 
+@app.route('/appointment')
+def user_appointment():
+    return render_template('patient/appointment.html',UserRoleEnum = UserRoleEnum)
 @app.route('/medicine/index')
 def medicine():
     thuoc = dao.get_medicine()
