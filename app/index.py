@@ -22,9 +22,8 @@ def signin_admin():
         username = request.form.get('username')
         password = request.form.get('password')
 
-        user = utils.check_login(username=username,
-                                 password=password,
-                                 role=UserRoleEnum.ADMIN)
+        user = utils.check_userlogin(username=username,
+                                 password=password,)
         if user:
             login_user(user=user)
             return redirect(url_for('admin'))

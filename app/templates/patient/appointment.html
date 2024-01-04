@@ -4,6 +4,26 @@
 
 {% block content %}
 <div>
-    <h1>Đăng ký khám</h1>
+    <h1 style="color: #3d9bff">Đăng ký khám</h1>
+    <br>
+    <form>
+  <div class="row">
+    <div class="col">
+      <input type="text" class="form-control" placeholder="Họ tên" name="name">
+    </div>
+    <div class="col">
+      <input type="password" class="form-control" placeholder="Giới tính" name="sex">
+    </div>
+  </div>
+        <br>
+  <div class="row">
+    <div class="col">
+      <input type="date" class="form-control" placeholder="Ngày sinh" name="Birth">
+    </div>
+    <div class="col">
+      <input type="password" class="form-control" placeholder="Địa chỉ" name="Address">
+    </div>
+  </div>
+</form>
 </div>
 {% endblock %}
