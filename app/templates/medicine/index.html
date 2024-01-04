@@ -1,0 +1,55 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+    <div class="content-wrapper">
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                            <a href="/thuoc/create" class="btn btn-success float-right m-2">Add</a>
+                    </div>
+                    <div class="card w-100">
+                        <div class="card-body">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Tên thuốc</th>
+                                        <th scope="col">Cách dùng</th>
+                                        <th scope="col">Số lượng</th>
+                                        <th scope="col">Đơn vị</th>
+                                        <th scope="col">manament</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for t in thuoc %}
+                                        <tr>
+
+                                            <th scope="row">{{t.id}}</th>
+                                            <td>{{t.tenthuoc}}</td>
+                                            <td>{{t.cachdung}}</td>
+                                            <td>{{t.soluong}}</td>
+                                            <td>{{t.donvi}}</td>
+
+                                            <td>
+                                                    <a href="/thuoc/update/{{t.id}}"
+                                                        class="btn btn-warning">Edit</a>
+                                                    <a href="/thuoc/delete/{{t.id}}"
+                                                        class="btn btn-danger">Delete</a>
+                                            </td>
+
+                                        </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

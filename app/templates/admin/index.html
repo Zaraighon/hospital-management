@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+
+
+    min-height: 100vh; /* Đảm bảo body chiếm ít nhất 100% chiều cao của viewport */
+            display: flex;
+            flex-direction: column;
+
+
+      margin: 0;
+      padding: 0;
+      background: url('https://backpainsa.com/wp-content/uploads/2015/02/bigstock-Medical-physician-doctor-hands-84721406.jpg') center/cover no-repeat fixed;
+    }
+
+    .header {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: white;
+    }
+
+    .navbar {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+
+    .navbar-brand {
+      font-size: 24px;
+    }
+
+    .content-container {
+      z-index: 1;
+    }
+
+    /* Optional: Customize the styling for your form */
+    .d-flex input {
+      border-radius: 0;
+    }
+
+    .d-flex button {
+      border-radius: 0;
+    }
+
+    .footer {
+            background-color: #3d9bff;
+            color: white;
+            padding: 10px;
+            margin-top: auto;
+        }
+  </style>
+  <title>Trang quản trị</title>
+</head>
+<body>
+
+<div class="header ">
+  <nav class="navbar navbar-expand-sm navbar-dark" style="background-color: #3d9bff;">
+    <div class="container-fluid ">
+      <a class="navbar-brand" href="javascript:void(0)">Quản trị phòng mạch</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="mynavbar">
+          {% if current_user.is_authenticated  %}
+        <ul class="navbar-nav ml-auto">
+            {% if current_user.user_role == UserRoleEnum.ADMIN %}
+          <li class="nav-item">
+            <a class="nav-link" href="javascript:void(0)">Trang chủ</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="javascript:void(0)">Thống kê</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="javascript:void(0)">Thay đổi quy định</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="javascript:void(0)">Quản lý thuốc</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="javascript:void(0)">Liên hệ</a>
+          </li>
+            {% endif %}
+          <button type="button" class="btn btn-primary" style="background-color: #ed9018; width:120px;" >
+              <a class="nav-link" href="{{ url_for('admin_signout') }}" style="color: white">Đăng xuất</a>
+          </button>
+
+        </ul>
+          {% else %}
+            <a></a>
+            {% endif %}
+      </div>
+    </div>
+  </nav>
+
+  <div class="content-container">
+    <h1 style="color:#3d9bff;">Trang quản trị phòng mạch</h1>
+
+      {% if err_msg %}
+                        <div class="alert alert-danger">
+                            <h6>{{ err_msg }}</h6>
+                        </div>
+                    {% endif %}
+          {% if current_user.is_authenticated %}
+          <a class="nav-link" href="{{ url_for('index') }}" style="color:#3d9bff">
+            Xin chào, {{ current_user.name }}
+          </a>
+    {% else %}
+            <div class="row">
+                <div class="col-md-6 offset-md-3">
+
+                <form method="post" action="{{ url_for('signin_admin') }}">
+                    <div class="form-group text-center">
+                        <label for="username" style="color: black">Tên đăng nhập</label>
+                        <input type="text" class="form-control mx-auto mb-3" id="username" name="username" required style="width:100%"/>
+                    </div>
+                    <div class="form-group text-center">
+                        <label for="password" style="color: black">Mật khẩu</label>
+                        <input type="password" class="form-control mx-auto mb-3" id="password" name="password" required style="width:100%"/>
+                    </div>
+                    <div class="text-center">
+                        <input type="submit" value="Đăng nhập" class="btn btn-primary mx-auto">
+                    </div>
+                </form>
+            </div>
+        </div>
+          {% endif %}
+  </div>
+</div>
+<div style="background-color: #3d9bff; height:150px" class=" footer container-fluid d-flex flex-column justify-content-center">
+  <h1 class="">Clinic Management Website</h1>
+  <p>Huynh Trong Nghia © 2024</p>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

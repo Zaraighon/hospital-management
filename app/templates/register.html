@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Đăng ký</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+            integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+            integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+            crossorigin="anonymous"></script>
+    <style>
+    body {
+            min-height: 100vh; /* Đảm bảo body chiếm ít nhất 100% chiều cao của viewport */
+            display: flex;
+            flex-direction: column;
+        }
+    .footer {
+        background-color: #3d9bff;
+        color: white;
+        padding: 10px;
+        margin-top: auto;
+    }
+    </style>
+</head>
+<body>
+    <h1 class="text-center text-primary mt-5">ĐĂNG KÝ NGƯỜI DÙNG</h1>
+
+    <div class="container mt-5">
+        {% if err_msg %}
+        <div class="alert alert-danger">
+            <h4>{{ err_msg }}</h4>
+        </div>
+        {% endif %}
+        <form method="post" action="{{ url_for('user_register') }}">
+        <div class="form-group text-center">
+            <label for="name">Họ tên</label>
+            <input type="text" class="form-control mx-auto mb-3" id="name" name="name" required style="width:500px"/>
+        </div>
+        <div class="form-group text-center">
+            <label for="username">Tên đăng nhập</label>
+            <input type="text" class="form-control mx-auto mb-3" id="username" name="username" required style="width:500px"/>
+        </div>
+        <div class="form-group text-center">
+            <label for="password">Mật khẩu</label>
+            <input type="password" class="form-control mx-auto mb-3" id="password" name="password" required style="width:500px"/>
+        </div>
+        <div class="form-group text-center">
+            <label for="confirm">Xác nhận mật khẩu</label>
+            <input type="password" class="form-control mx-auto mb-3" id="confirm" name="confirm" required style="width:500px"/>
+        </div>
+        <div class="text-center">
+            <input type="submit" value="Đăng ký" class="btn btn-primary mx-auto">
+        </div>
+    </form>
+    </div>
+<div style="background-color: #3d9bff; height:150px" class=" footer container-fluid d-flex flex-column justify-content-center">
+  <h1 class="">Clinic Management Website</h1>
+  <p>Huynh Trong Nghia © 2024</p>
+</div>
+</body>
+</html>

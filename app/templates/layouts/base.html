@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        {% block title %}{% endblock %}
+    </title>
+    <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+
+
+    min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+
+
+      margin: 0;
+      padding: 0;
+      background: url('https://backpainsa.com/wp-content/uploads/2015/02/bigstock-Medical-physician-doctor-hands-84721406.jpg') center/cover no-repeat fixed;
+    }
+
+    .header {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: white;
+    }
+
+    .navbar {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+
+    .navbar-brand {
+      font-size: 24px;
+    }
+
+    .content-container {
+      z-index: 1;
+    }
+
+    /* Optional: Customize the styling for your form */
+    .d-flex input {
+      border-radius: 0;
+    }
+
+    .d-flex button {
+      border-radius: 0;
+    }
+
+    .footer {
+            background-color: #3d9bff;
+            color: white;
+            padding: 10px;
+            margin-top: auto;
+        }
+  </style>
+</head>
+<body>
+{% include 'layouts/header.html' %}
+<div class="container">
+{% block content %}
+{% endblock %}
+</div>
+{% include 'layouts/footer.html' %}
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>
