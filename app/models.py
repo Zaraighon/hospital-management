@@ -34,7 +34,8 @@ class Patient(db.Model):
     __tablename__ = 'patient'
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(50), nullable=True)
-    # gender = Column(Enum(GenderEnum), default=GenderEnum.MALE)
+    gender = Column(String(10), nullable=True)
+    date_appointment = Column(DateTime, nullable=True)
     date_of_birth = Column(DateTime, nullable=True)
     address = Column(String(100), nullable=True)
     disease_history = Column(String(100), nullable=True)

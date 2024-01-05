@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
-from app.models import Medicine, UserRoleEnum
+from app.models import Medicine, UserRoleEnum, Patient
 import dao
 from app import app, db, utils, login
 from flask_login import login_user, logout_user, login_required, current_user
@@ -65,19 +65,27 @@ def user_register():
 def user_appointment():
     # check role bệnh nhân
     err_msg = ""
+    sc_msg=""
     if current_user.user_role == UserRoleEnum.PATIENT:
         if request.method.__eq__('POST'):
             name = request.form.get('name')
+            gender = request.form['gender']
+            date_appointment = request.form.get('date_appointment')
             date_of_birth = request.form.get('date_of_birth')
             address = request.form.get('address')
             disease_history = request.form.get('disease_history')
 
             try:
-                utils.add_appointment(name=name, date_of_birth=date_of_birth,address=address,disease_history=disease_history)
+                count = Patient.query.filter_by(date_appointment=date_appointment).count()
+                if count == 10:
+                    err_msg = 'Ngày đăng ký khám đã hết chỗ'
+                    return render_template('patient/appointment.html', err_msg = err_msg, UserRoleEnum=UserRoleEnum)
+                utils.add_appointment(name=name,gender=gender,date_appointment=date_appointment, date_of_birth=date_of_birth,address=address,disease_history=disease_history)
             except Exception as ex:
-                err_msg = 'Thêm không thành công' + str(ex)
+                err_msg = 'Đăng ký khám không thành công' + str(ex)
             else:
-                return  redirect(url_for('index'))
+                sc_msg = 'Đăng ký khám thành công'
+                return  render_template('patient/appointment.html', sc_msg=sc_msg,UserRoleEnum=UserRoleEnum)
         return render_template('patient/appointment.html',err_msg=err_msg, UserRoleEnum=UserRoleEnum)
     else:
         return redirect(url_for('index'))

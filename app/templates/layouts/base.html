@@ -75,6 +75,22 @@
 {% endblock %}
 </div>
 {% include 'layouts/footer.html' %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var alertElement = document.querySelector('.alert-success');
+
+        if (alertElement) {
+            setTimeout(function () {
+                alertElement.style.opacity = '0';
+                alertElement.style.transition = 'opacity 1s ease-out';
+
+                setTimeout(function () {
+                    alertElement.style.display = 'none';
+                }, 1000);
+            }, 3000);
+        }
+    });
+</script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
