@@ -3,27 +3,60 @@
 {% block title %}Đăng ký khám bệnh{% endblock %}
 
 {% block content %}
-<div>
+<div style="width: 50%">
     <h1 style="color: #3d9bff">Đăng ký khám</h1>
-    <br>
-    <form>
+    <br><br>
+    {% if sc_msg %}
+        <div class="alert alert-successr">
+            <h4>{{ sc_msg }}</h4>
+        </div>
+        {% endif %}
+    {% if err_msg %}
+        <div class="alert alert-danger">
+            <h4>{{ err_msg }}</h4>
+        </div>
+        {% endif %}
+    <form method="post" action="{{ url_for('user_appointment')}}">
+          <div class="row">
+            <div class="col">
+              <label for="name" class="form-label font-weight-bold">Họ tên</label>
+              <input type="text" class="form-control " id="name" placeholder="Họ tên" name="name">
+            </div>
+            <div class="col">
+              <label class="form-label font-weight-bold">Giới tính</label>
+                <div class="row mt-2">
+                    <div class="form-check mr-5 ml-5">
+                      <input type="radio" class="form-check-input" id="radio1" name="gender" value="MALE" checked>
+                      <label class="form-check-label" for="radio1">Nam</label>
+                    </div>
+                    <div class="form-check">
+                      <input type="radio" class="form-check-input" id="radio2" name="gender" value="FEMALE">
+                      <label class="form-check-label" for="radio2">Nữ</label>
+                    </div>
+                </div>
+            </div>
+          </div>
+        <br>
   <div class="row">
     <div class="col">
-      <input type="text" class="form-control" placeholder="Họ tên" name="name">
+      <label for="birth" class="form-label font-weight-bold">Ngày sinh</label>
+      <input type="date" class="form-control" id="birth" placeholder="Ngày sinh" name="Birth">
     </div>
     <div class="col">
-      <input type="password" class="form-control" placeholder="Giới tính" name="sex">
+      <label for="address" class="form-label font-weight-bold">Địa chỉ</label>
+        <textarea type="" class="form-control " id="address" placeholder="Địa chỉ" name="Address"></textarea>
     </div>
   </div>
         <br>
   <div class="row">
     <div class="col">
-      <input type="date" class="form-control" placeholder="Ngày sinh" name="Birth">
-    </div>
-    <div class="col">
-      <input type="password" class="form-control" placeholder="Địa chỉ" name="Address">
+      <label for="disease_history" class="form-label font-weight-bold">Lịch sử bệnh lý</label>
+        <textarea type="text" class="form-control" id="disease_history" placeholder="Lịch sử bệnh lý" rows="5" name="Address"></textarea>
     </div>
   </div>
+        <br>
+        <input type="submit" value="Đăng ký" class="btn btn-primary mx-auto" style="width:150px">
+
 </form>
 </div>
 {% endblock %}

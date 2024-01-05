@@ -25,52 +25,39 @@ class User(db.Model, UserMixin):
         return self.name
 
 
+class GenderEnum(Enum):
+    MALE = 'Male'
+    FEMALE = 'Female'
+
+# bảng test
+class Test(db.Model):
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    text = Column(String(10), nullable=True)
+
+    def __str__(self):
+        return self.text
+
+
 class Patient(db.Model):
+    __tablename__ = 'patient'
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(50), nullable=True)
-    gender = Column(String(10), nullable=True)
+    # gender = Column(Enum(GenderEnum), default=GenderEnum.MALE)
     date_of_birth = Column(DateTime, nullable=True)
     address = Column(String(100), nullable=True)
+    disease_history = Column(String(100), nullable=True)
+    # date_id = Column(Integer, ForeignKey('dateappointment.id'))
+    # date_appointment = relationship('DateAppointment', back_populates='patients')
 
     def __str__(self):
         return self.name
 
 
-class PatientWithAccount(db.Model):
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    registration_date = Column(DateTime)
-    user_id = Column(Integer, ForeignKey(User.id), nullable=False, unique=True)
-    patient_id = Column(Integer, ForeignKey(Patient.id), nullable=False, unique=True)
-
-    def __str__(self):
-        return self.name
-
-
-# class Nurse(db.Model):
+# class DateAppointment(db.Model):
+#     __tablename__ = 'dateappointment'
 #     id = Column(Integer, primary_key=True, autoincrement=True)
-#     name = Column(String(50), nullable=True)
-#     user_id = Column(Integer, ForeignKey(User.id), nullable=False, unique=True)
-#
-#     def __str__(self):
-#         return self.name
-#
-#
-# class Doctor(db.Model):
-#     id = Column(Integer, primary_key=True, autoincrement=True)
-#     name = Column(String(50), nullable=True)
-#     user_id = Column(Integer, ForeignKey(User.id), nullable=False, unique=True)
-#
-#     def __str__(self):
-#         return self.name
-#
-#
-# class Cashier(db.Model):
-#     id = Column(Integer, primary_key=True, autoincrement=True)
-#     name = Column(String(50), nullable=True)
-#     user_id = Column(Integer, ForeignKey(User.id), nullable=False, unique=True)
-#
-#     def __str__(self):
-#         return self.name
+#     date = Column(DateTime, nullable=True)
+#     patients = relationship('Patient', back_populates='date_appointment')
 
 
 class MedicineUnit(db.Model):
@@ -95,6 +82,7 @@ class Medicine(db.Model):
     def __str__(self):
         return self.medicine_name
 
+
 class PhieuKham(db.Model):
     __tablename__ = 'phieukham'
 
@@ -107,9 +95,6 @@ class PhieuKham(db.Model):
                                Column('phieukham_id', Integer, ForeignKey('phieukham.id'), primary_key=True),
                                Column('thuoc_id', Integer, ForeignKey(Medicine.id), primary_key=True),
                                Column('soluong', Integer, nullable=False))
-
-
-
 
 
 if __name__ == '__main__':
@@ -128,5 +113,5 @@ if __name__ == '__main__':
                  password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()), user_role=UserRoleEnum.DOCTOR)
         c = User(name='cashier1', username='cashier1',
                  password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()), user_role=UserRoleEnum.CASHIER)
-        db.session.add_all([u,p,n,d,c])
+        db.session.add_all([u, p, n, d, c])
         db.session.commit()

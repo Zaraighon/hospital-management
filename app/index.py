@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from app.models import Medicine, UserRoleEnum
 import dao
 from app import app, db, utils, login
-from flask_login import login_user, logout_user, login_required
+from flask_login import login_user, logout_user, login_required, current_user
 
 
 @app.route('/')
@@ -23,7 +23,7 @@ def signin_admin():
         password = request.form.get('password')
 
         user = utils.check_adminlogin(username=username,
-                                 password=password,)
+                                      password=password, )
         if user:
             login_user(user=user)
             return redirect(url_for('admin'))
@@ -94,7 +94,14 @@ def user_load(user_id):
 
 @app.route('/appointment')
 def user_appointment():
-    return render_template('patient/appointment.html',UserRoleEnum = UserRoleEnum)
+    # check role bệnh nhân
+    if current_user.user_role == UserRoleEnum.PATIENT:
+        return render_template('patient/appointment.html', UserRoleEnum=UserRoleEnum)
+
+    else:
+        return redirect(url_for('index'))
+
+
 @app.route('/medicine/index')
 def medicine():
     thuoc = dao.get_medicine()
@@ -148,7 +155,7 @@ def update(id):
             db.session.commit()
             return redirect('/medicine/index')
         except:
-            return 'Có lỗi sẩy ra khi cập nhật'
+            return 'Có lỗi xảy ra khi cập nhật'
 
     else:
         return render_template('medicine/update.html', task=task)
