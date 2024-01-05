@@ -61,6 +61,26 @@ def user_register():
     return render_template('register.html', err_msg=err_msg)
 
 
+@app.route('/appointment', methods=['get','post'])
+def user_appointment():
+    # check role bệnh nhân
+    err_msg = ""
+    if current_user.user_role == UserRoleEnum.PATIENT:
+        if request.method.__eq__('POST'):
+            name = request.form.get('name')
+            date_of_birth = request.form.get('date_of_birth')
+            address = request.form.get('address')
+            disease_history = request.form.get('disease_history')
+
+            try:
+                utils.add_appointment(name=name, date_of_birth=date_of_birth,address=address,disease_history=disease_history)
+            except Exception as ex:
+                err_msg = 'Thêm không thành công' + str(ex)
+            else:
+                return  redirect(url_for('index'))
+        return render_template('patient/appointment.html',err_msg=err_msg, UserRoleEnum=UserRoleEnum)
+    else:
+        return redirect(url_for('index'))
 @app.route('/user-login', methods=['get', 'post'])
 def user_signin():
     err_msg = ''
@@ -92,14 +112,7 @@ def user_load(user_id):
     return utils.get_user_by_id(user_id=user_id)
 
 
-@app.route('/appointment')
-def user_appointment():
-    # check role bệnh nhân
-    if current_user.user_role == UserRoleEnum.PATIENT:
-        return render_template('patient/appointment.html', UserRoleEnum=UserRoleEnum)
 
-    else:
-        return redirect(url_for('index'))
 
 
 @app.route('/medicine/index')

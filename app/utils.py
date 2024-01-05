@@ -1,5 +1,5 @@
 from app import app, db
-from app.models import User, UserRoleEnum
+from app.models import User, UserRoleEnum,Patient
 import hashlib
 
 
@@ -8,6 +8,13 @@ def add_user(name, username, password, **kwargs):
     user = User(name=name.strip(), username=username.strip(), password=password)
 
     db.session.add(user)
+    db.session.commit()
+
+# bệnh nhân đăng ký khám
+def add_appointment(name,date_of_birth, address, disease_history):
+    patient_appointment = Patient(name=name.strip(), date_of_birth=date_of_birth,address=address.strip(),disease_history=disease_history.strip())
+
+    db.session.add(patient_appointment)
     db.session.commit()
 
 

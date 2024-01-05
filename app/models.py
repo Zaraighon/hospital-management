@@ -29,14 +29,6 @@ class GenderEnum(Enum):
     MALE = 'Male'
     FEMALE = 'Female'
 
-# bảng test
-class Test(db.Model):
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    text = Column(String(10), nullable=True)
-
-    def __str__(self):
-        return self.text
-
 
 class Patient(db.Model):
     __tablename__ = 'patient'

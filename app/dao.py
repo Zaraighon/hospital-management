@@ -22,9 +22,3 @@ def insert_medicine():
         mysql.connection.commit()
 
 
-# bệnh nhân đăng ký khám
-def patient_add_appointment(name,birth, address, desease_history):
-    patient_appointment = Patient(name=name.strip(), birth=birth,address=address.strip(),desease_history=desease_history.strip())
-
-    db.session.add(patient_appointment)
-    db.session.commit()
