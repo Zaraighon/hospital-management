@@ -1,0 +1,72 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Đăng ký khám bệnh{% endblock %}
+
+{% block content %}
+<div style="width: 60%">
+    <br>
+    <h1 style="color: #3d9bff">Thêm bệnh nhân</h1>
+    <br>
+        {% if sc_msg %}
+        <div class="alert alert-success fade-out" style="background-color: #66ff61;position: fixed; top: 7.5%; right: 41.5%; z-index: 9999; opacity: 1; transition: opacity 1s ease-out;">
+            <h4>{{ sc_msg }}</h4>
+        </div>
+        {% endif %}
+    {% if err_msg %}
+        <div class="alert alert-danger">
+            <h4>{{ err_msg }}</h4>
+        </div>
+        {% endif %}
+
+
+    <form method="post" action="{{ url_for('nurse_add_appointment')}}">
+
+          <div class="row">
+            <div class="col">
+              <label for="name" class="form-label font-weight-bold">Họ tên</label>
+              <input type="text" class="form-control " id="name" placeholder="Nhập họ tên" name="name" required>
+            </div>
+            <div class="col">
+              <label class="form-label font-weight-bold">Giới tính</label>
+                <div class="row mt-2">
+                    <div class="form-check mr-5 ml-5">
+                      <input type="radio" class="form-check-input" id="radio1" name="gender" value="Nam" checked>
+                      <label class="form-check-label" for="radio1">Nam</label>
+                    </div>
+                    <div class="form-check">
+                      <input type="radio" class="form-check-input" id="radio2" name="gender" value="Nữ">
+                      <label class="form-check-label" for="radio2">Nữ</label>
+                    </div>
+                </div>
+            </div>
+          </div>
+        <br>
+  <div class="row">
+    <div class="col">
+      <label for="birth" class="form-label font-weight-bold">Ngày sinh</label>
+      <input type="date" class="form-control" id="birth" placeholder="Ngày sinh" name="date_of_birth" required>
+        <br>
+        <label for="birth" class="form-label font-weight-bold">Chọn ngày khám</label>
+      <input type="date" class="form-control" id="date_appointment" placeholder="Ngày khám" name="date_appointment" required>
+    </div>
+    <div class="col">
+      <label for="address" class="form-label font-weight-bold">Địa chỉ</label>
+        <textarea type="" class="form-control" id="address" placeholder="Nhập địa chỉ" name="address" required></textarea>
+    </div>
+  </div>
+        <br>
+  <div class="row">
+    <div class="col">
+      <label for="disease_history" class="form-label font-weight-bold">Lịch sử bệnh lý</label>
+        <textarea type="text" class="form-control" id="disease_history" placeholder="Nhập lịch sử bệnh lý" rows="5" name="disease_history"></textarea>
+    </div>
+  </div>
+        <br>
+        <input type="submit" value="Thêm" class="btn btn-primary mx-auto" style="background-color: #3d9bff;width:150px">
+    <button type="button" onclick="window.history.back()" class="btn btn-primary ml-3" style="background-color: silver; width:150px">
+        <a href="">Hủy</a>
+    </button>
+
+</form>
+</div>
+{% endblock %}
