@@ -61,11 +61,25 @@ def user_register():
     return render_template('register.html', err_msg=err_msg)
 
 
-@app.route('/appointment', methods=['get','post'])
+# LẤY DANH SÁCH KHÁM THEO NGÀY
+@app.route('/appointment-list', methods=['get'])
+def nurse_appointment_list():
+    # CHECK ROLE Y TÁ
+    if current_user.user_role == UserRoleEnum.NURSE:
+        if request.method.__eq__('GET'):
+            selected_date = request.args.get('selected_date')
+            patients = Patient.query.filter_by(date_appointment=selected_date).all()
+        return render_template('nurse/appointmentList.html',selected_date = selected_date,patients=patients, UserRoleEnum=UserRoleEnum)
+    else:
+        return redirect(url_for('index'))
+
+
+# BỆNH NHÂN ĐĂNG KÝ KHÁM
+@app.route('/appointment', methods=['get', 'post'])
 def user_appointment():
     # check role bệnh nhân
     err_msg = ""
-    sc_msg=""
+    sc_msg = ""
     if current_user.user_role == UserRoleEnum.PATIENT:
         if request.method.__eq__('POST'):
             name = request.form.get('name')
@@ -79,16 +93,19 @@ def user_appointment():
                 count = Patient.query.filter_by(date_appointment=date_appointment).count()
                 if count == 10:
                     err_msg = 'Ngày đăng ký khám đã hết chỗ'
-                    return render_template('patient/appointment.html', err_msg = err_msg, UserRoleEnum=UserRoleEnum)
-                utils.add_appointment(name=name,gender=gender,date_appointment=date_appointment, date_of_birth=date_of_birth,address=address,disease_history=disease_history)
+                    return render_template('patient/appointment.html', err_msg=err_msg, UserRoleEnum=UserRoleEnum)
+                utils.add_appointment(name=name, gender=gender, date_appointment=date_appointment,
+                                      date_of_birth=date_of_birth, address=address, disease_history=disease_history)
             except Exception as ex:
                 err_msg = 'Đăng ký khám không thành công' + str(ex)
             else:
                 sc_msg = 'Đăng ký khám thành công'
-                return  render_template('patient/appointment.html', sc_msg=sc_msg,UserRoleEnum=UserRoleEnum)
-        return render_template('patient/appointment.html',err_msg=err_msg, UserRoleEnum=UserRoleEnum)
+                return render_template('patient/appointment.html', sc_msg=sc_msg, UserRoleEnum=UserRoleEnum)
+        return render_template('patient/appointment.html', err_msg=err_msg, UserRoleEnum=UserRoleEnum)
     else:
         return redirect(url_for('index'))
+
+
 @app.route('/user-login', methods=['get', 'post'])
 def user_signin():
     err_msg = ''
@@ -118,9 +135,6 @@ def user_signout():
 @login.user_loader
 def user_load(user_id):
     return utils.get_user_by_id(user_id=user_id)
-
-
-
 
 
 @app.route('/medicine/index')

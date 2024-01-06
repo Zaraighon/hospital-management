@@ -17,10 +17,10 @@
 
           {% if current_user.is_authenticated and current_user.user_role == UserRoleEnum.NURSE %}
           <li class="nav-item">
-            <a class="nav-link" href="javascript:void(0)">Lập danh sách khám</a>
+            <a class="nav-link" href="{{ url_for('nurse_appointment_list')}}">Lập danh sách khám</a>
           </li>
           {% endif %}
-          {% if current_user.is_authenticated and current_user.user_role == UserRoleEnum.NURSE %}
+          {% if current_user.is_authenticated and current_user.user_role == UserRoleEnum.CASHIER %}
           <li class="nav-item">
             <a class="nav-link" href="javascript:void(0)">Lập hóa đơn</a>
           </li>
