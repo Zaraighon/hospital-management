@@ -6,7 +6,7 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-12">
-                            <a href="/thuoc/create" class="btn btn-success float-right m-2">Add</a>
+                            <a href="/medicine/create" class="btn btn-success float-right m-2">Add</a>
                     </div>
                     <div class="card w-100">
                         <div class="card-body">
@@ -16,7 +16,7 @@
                                         <th scope="col">#</th>
                                         <th scope="col">Tên thuốc</th>
                                         <th scope="col">Cách dùng</th>
-                                        <th scope="col">Số lượng</th>
+                                        <th scope="col">Giá</th>
                                         <th scope="col">Đơn vị</th>
                                         <th scope="col">manament</th>
                                     </tr>
@@ -26,15 +26,15 @@
                                         <tr>
 
                                             <th scope="row">{{t.id}}</th>
-                                            <td>{{t.tenthuoc}}</td>
-                                            <td>{{t.cachdung}}</td>
-                                            <td>{{t.soluong}}</td>
-                                            <td>{{t.donvi}}</td>
+                                            <td>{{t.medicine_name}}</td>
+                                            <td>{{t.how_to_use}}</td>
+                                            <td>{{t.price}}</td>
+                                            <td>{{t.unit_name}}</td>
 
                                             <td>
-                                                    <a href="/thuoc/update/{{t.id}}"
+                                                    <a href="/medicine/update/{{t.id}}"
                                                         class="btn btn-warning">Edit</a>
-                                                    <a href="/thuoc/delete/{{t.id}}"
+                                                    <a href="/medicine/delete/{{t.id}}"
                                                         class="btn btn-danger">Delete</a>
                                             </td>
 

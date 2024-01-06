@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, ForeignKey, Enum, DateTime
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, Enum, DateTime, Boolean
 from sqlalchemy.orm import relationship
 from app import db, app
 from datetime import datetime
@@ -13,6 +13,12 @@ class UserRoleEnum(enum.Enum):
     DOCTOR = 4
     CASHIER = 5
 
+class BaseModel(db.Model):
+    __abstract__ = True
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    active = Column(Boolean, default=True)
+    created_date = Column(DateTime, default=datetime.now())
 
 class User(db.Model, UserMixin):
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -39,6 +45,7 @@ class Patient(db.Model):
     date_of_birth = Column(DateTime, nullable=True)
     address = Column(String(100), nullable=True)
     disease_history = Column(String(100), nullable=True)
+    phieukhams = relationship('PhieuKham', backref='patient')
     # date_id = Column(Integer, ForeignKey('dateappointment.id'))
     # date_appointment = relationship('DateAppointment', back_populates='patients')
 
@@ -53,58 +60,66 @@ class Patient(db.Model):
 #     patients = relationship('Patient', back_populates='date_appointment')
 
 
-class MedicineUnit(db.Model):
-    __tablename__ = 'medicineunit'
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    unit_name = Column(String(50), nullable=False, unique=True)
 
-    def __str__(self):
-        return self.tendonvi
-
-
-class Medicine(db.Model):
+class Medicine(BaseModel):
     __tablename__ = 'medicine'
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
     medicine_name = Column(String(50), nullable=False, unique=True)
-    how_to_use = Column(String(255), nullable=False, unique=True)
+    how_to_use = Column(String(255), nullable=False)
     price = Column(Float, default=0)
-    unit_name = Column(String(50), ForeignKey(MedicineUnit.unit_name), nullable=False)
-    unit = relationship(MedicineUnit, backref='medicines')
+    unit_name = Column(String(50), nullable=False)
 
     def __str__(self):
         return self.medicine_name
 
 
-class PhieuKham(db.Model):
+class PhieuKham(BaseModel):
     __tablename__ = 'phieukham'
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
     ngaykham = Column(DateTime, default=datetime.now())
-    trieuchung = Column(String(255), nullable=False, unique=True)
-    loaibenh = Column(String(50), nullable=False, unique=True)
+    trieuchung = Column(String(255), nullable=False)
+    loaibenh = Column(String(50), nullable=False)
+    price = Column(Float, default=100000)
+    receipt = relationship('Receipt', backref='phieukham', lazy=True)
+    donthuoc = relationship('DonThuoc',backref='phieukham', lazy=True)
+    patient_id = Column(Integer, ForeignKey('patient.id'))
 
-    phieukham_thuoc = db.Table('phieukham_thuoc',
-                               Column('phieukham_id', Integer, ForeignKey('phieukham.id'), primary_key=True),
-                               Column('thuoc_id', Integer, ForeignKey(Medicine.id), primary_key=True),
-                               Column('soluong', Integer, nullable=False))
+
+class DonThuoc(db.Model):
+    __tablename__ = 'donthuoc'
+
+    # id = Column(Integer, primary_key=True, autoincrement=True)
+
+    phieukham_id = Column(Integer, ForeignKey(PhieuKham.id), primary_key=True)
+    thuoc_id = Column(Integer, ForeignKey(Medicine.id), primary_key=True)
+    soluong = Column(Integer, nullable=False)
+
+
+class Receipt(BaseModel):
+    __tablename__ = 'receipt'
+
+    user_id = Column(Integer, ForeignKey(User.id), nullable=True)
+    phieukham_id = Column(Integer, ForeignKey(PhieuKham.id))
+    price = Column(Float, default=0)
+
+
 
 
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
 
-        import hashlib
-
-        u = User(name='Admin', username='admin',
-                 password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()), user_role=UserRoleEnum.ADMIN)
-        p = User(name='Patient1', username='patient1',
-                 password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()), user_role=UserRoleEnum.PATIENT)
-        n = User(name='Nurse1', username='nurse1',
-                 password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()), user_role=UserRoleEnum.NURSE)
-        d = User(name='doctor1', username='doctor1',
-                 password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()), user_role=UserRoleEnum.DOCTOR)
-        c = User(name='cashier1', username='cashier1',
-                 password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()), user_role=UserRoleEnum.CASHIER)
-        db.session.add_all([u, p, n, d, c])
-        db.session.commit()
+        # import hashlib
+        #
+        # u = User(name='Admin', username='admin',
+        #          password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()), user_role=UserRoleEnum.ADMIN)
+        # p = User(name='Patient1', username='patient1',
+        #          password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()), user_role=UserRoleEnum.PATIENT)
+        # n = User(name='Nurse1', username='nurse1',
+        #          password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()), user_role=UserRoleEnum.NURSE)
+        # d = User(name='doctor1', username='doctor1',
+        #          password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()), user_role=UserRoleEnum.DOCTOR)
+        # c = User(name='cashier1', username='cashier1',
+        #          password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()), user_role=UserRoleEnum.CASHIER)
+        # db.session.add_all([u, p, n, d, c])
+        # db.session.commit()

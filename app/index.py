@@ -169,35 +169,69 @@ def user_load(user_id):
     return utils.get_user_by_id(user_id=user_id)
 
 
+
+
+# them sua xóa thuốc
 @app.route('/medicine/index')
 def medicine():
-    thuoc = dao.get_medicine()
-    return render_template('medicine/index.html', thuoc=thuoc)
-
+    if current_user.user_role == UserRoleEnum.ADMIN:
+        if request.method.__eq__('GET'):
+            get_medicine = dao.get_medicine()
+        return render_template('medicine/index.html', thuoc=get_medicine, UserRoleEnum=UserRoleEnum)
+    else:
+        return redirect(url_for('index'))
 
 @app.route('/medicine/create')
 def medicine_add():
-    return render_template('medicine/create.html')
-    # insertthuoc = dao.insertthuoc()
-
+    return render_template('medicine/create.html', UserRoleEnum=UserRoleEnum)
 
 @app.route('/medicine/create/submit', methods=['POST'])
 def medicine_submit():
+    err_msg = ""
     if request.method == "POST":
         medicine_name = request.form['medicine_name']
         how_to_use = request.form['how_to_use']
+        price = request.form['price']
         unit_name = request.form['unit_name']
 
-        medicine = Medicine(medicine_name=medicine_name, how_to_use=how_to_use, unit_name=unit_name)
-
-        db.session.add(medicine)
-        db.session.commit()
-
+        try:
+            if medicine_name == "" or how_to_use == "":
+                err_msg = 'Vui lòng nhập đầy đủ thông tin'
+                return render_template('medicine/create.html', err_msg=err_msg, UserRoleEnum=UserRoleEnum)
+            else:
+                medicine = Medicine(medicine_name=medicine_name, how_to_use=how_to_use, price=price,
+                                    unit_name=unit_name)
+                db.session.add(medicine)
+                db.session.commit()
+        except:
+            return 'Thuốc đã có sẵn vui lòng kiểm tra lại'
     return redirect('/medicine/index')
+
+@app.route('/medicine/update/<int:id>', methods=['GET', 'POST'])
+def update_medicine(id):
+    task = Medicine.query.get_or_404(id)
+    if request.method == "POST":
+        task.medicine_name = request.form['medicine_name']
+        task.how_to_use = request.form['how_to_use']
+        task.price = request.form['price']
+        task.unit_name = request.form['unit_name']
+
+        try:
+            if task.medicine_name == "" or task.how_to_use == "":
+                err_msg = 'Vui lòng nhập đầy đủ thông tin'
+                return render_template('medicine/update.html', err_msg=err_msg, UserRoleEnum=UserRoleEnum)
+            else:
+                db.session.commit()
+                return redirect('/medicine/index')
+        except:
+            return 'Thuốc đã có sẵn vui lòng kiểm tra lại'
+
+    else:
+        return render_template('medicine/update.html', task=task, UserRoleEnum=UserRoleEnum)
 
 
 @app.route('/medicine/delete/<int:id>')
-def delete(id):
+def delete_medicine(id):
     task_to_delete = Medicine.query.get_or_404(id)
 
     try:
@@ -207,25 +241,6 @@ def delete(id):
     except:
         return 'Có lỗi sảy ra khi xóa'
 
-
-@app.route('/medicine/update/<int:id>', methods=['GET', 'POST'])
-def update(id):
-    task = Medicine.query.get_or_404(id)
-
-    if request.method == "POST":
-        task.tenthuoc = request.form['tenthuoc']
-        task.cachdung = request.form['cachdung']
-        task.soluong = request.form['soluong']
-        task.donvi = request.form['donvi']
-
-        try:
-            db.session.commit()
-            return redirect('/medicine/index')
-        except:
-            return 'Có lỗi xảy ra khi cập nhật'
-
-    else:
-        return render_template('medicine/update.html', task=task)
 
 
 if __name__ == "__main__":
