@@ -7,23 +7,32 @@
                 <div class="row">
                     <div class="card w-100">
                         <div class="card-body">
-                            <form action="/thuoc/create/submit" method="POST">
+                            {% if err_msg %}
+                            <div class="alert alert-danger">
+                                <h4>{{ err_msg }}</h4>
+                            </div>
+                            {% endif %}
+                            <form action="/medicine/create/submit" method="POST">
                                 <div class="form-group">
                                     <label>Tên thuốc</label>
-                                    <input type="text" name="tenthuoc" class="form-control" placeholder="Enter name">
+                                    <input type="text" name="medicine_name" class="form-control" placeholder="Enter name">
                                 </div>
 
                                 <div class="form-group">
-                                    <label>Cách dùng</label>
-                                    <input type="text" name="cachdung" class="form-control" placeholder="Enter name">
+                                    <label>Cách dùng</label></br>
+                                    <textarea name="how_to_use" cols="60" rows="5"></textarea>
                                 </div>
                                 <div class="form-group">
-                                    <label>Số lượng</label>
-                                    <input type="text" name="soluong" class="form-control" placeholder="Enter name">
+                                    <label>Giá</label>
+                                    <input type="text" name="price" class="form-control" placeholder="Enter name">
                                 </div>
                                 <div class="form-group">
                                     <label>Đơn vị</label>
-                                    <input type="text" name="donvi" class="form-control" placeholder="Enter name">
+                                    <select name="unit_name" class="custom-select">
+                                        <option value="Vỉ">Vỉ</option>
+                                        <option value="Hộp">Hộp</option>
+                                        <option value="Viên">Viên</option>
+                                    </select>
                                 </div>
                                 <button type="submit" value="Submit" class="btn btn-primary ">Submit</button>
                             </form>
