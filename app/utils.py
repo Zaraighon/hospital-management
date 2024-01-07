@@ -35,22 +35,22 @@ def check_adminlogin(username, password, role=UserRoleEnum.ADMIN):
                                  User.user_role.__eq__(role)).first()
 
 
-def check_doctorlogin(username, password, role=UserRoleEnum.DOCTOR):
-    if username and password:
-        password = hashlib.md5(password.strip().encode('utf-8')).hexdigest()
-
-        return User.query.filter(User.username.__eq__(username.strip()),
-                                 User.password.__eq__(password),
-                                 User.user_role.__eq__(role)).first()
-
-
-def check_cashierlogin(username, password, role=UserRoleEnum.CASHIER):
-    if username and password:
-        password = hashlib.md5(password.strip().encode('utf-8')).hexdigest()
-
-        return User.query.filter(User.username.__eq__(username.strip()),
-                                 User.password.__eq__(password),
-                                 User.user_role.__eq__(role)).first()
+# def check_doctorlogin(username, password, role=UserRoleEnum.DOCTOR):
+#     if username and password:
+#         password = hashlib.md5(password.strip().encode('utf-8')).hexdigest()
+#
+#         return User.query.filter(User.username.__eq__(username.strip()),
+#                                  User.password.__eq__(password),
+#                                  User.user_role.__eq__(role)).first()
+#
+#
+# def check_cashierlogin(username, password, role=UserRoleEnum.CASHIER):
+#     if username and password:
+#         password = hashlib.md5(password.strip().encode('utf-8')).hexdigest()
+#
+#         return User.query.filter(User.username.__eq__(username.strip()),
+#                                  User.password.__eq__(password),
+#                                  User.user_role.__eq__(role)).first()
 
 
 def get_user_by_id(user_id):

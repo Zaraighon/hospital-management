@@ -34,6 +34,7 @@
                 <th>Ngày sinh</th>
                 <th>Địa chỉ</th>
                 <th>Lịch sử bệnh</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -45,6 +46,14 @@
                 <td>{{ patient.date_of_birth }}</td>
                 <td>{{ patient.address }}</td>
                 <td>{{ patient.disease_history }}</td>
+                <td
+                ><a href="#" title="Edit">
+                    <i class="fas fa-edit"></i>
+                </a>
+                <a href="#" title="Delete">
+                    <i class="fas fa-trash-alt" style="color:red"></i>
+                </a>
+                </td>
               </tr>
                 {% endfor %}
             </tbody>
