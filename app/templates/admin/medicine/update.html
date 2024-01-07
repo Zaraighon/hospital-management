@@ -12,27 +12,20 @@
                                 <h4>{{ err_msg }}</h4>
                             </div>
                             {% endif %}
-                            <form action="/medicine/create/submit" method="POST">
-
+                            <form action="/admin/medicine/update/{{task.id}}" method="POST">
                                 <div class="form-group">
                                     <label>Tên thuốc</label>
-                                    <input type="text" name="medicine_name" class="form-control" placeholder="Enter name">
-
+                                    <input type="text" name="medicine_name" value="{{task.medicine_name}}" class="form-control" placeholder="Enter name">
                                 </div>
 
-
-                                <div class="form-group">
+                                 <div class="form-group">
                                     <label>Cách dùng</label></br>
-                                    <textarea name="how_to_use" cols="60" rows="5"></textarea>
-
+                                    <textarea name="how_to_use" cols="60" rows="5">{{task.how_to_use}}</textarea>
                                 </div>
-
                                 <div class="form-group">
                                     <label>Giá</label>
-                                    <input type="text" name="price" class="form-control" placeholder="Enter name">
-
+                                    <input type="text" name="price" value="{{task.price}}" class="form-control" placeholder="Enter name">
                                 </div>
-
                                 <div class="form-group">
                                     <label>Đơn vị</label>
                                     <select name="unit_name" class="custom-select">

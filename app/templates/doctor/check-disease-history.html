@@ -1,0 +1,50 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+    <div class="content-wrapper">
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="card w-100">
+                        <div class="card-body">
+                            <table id="data" class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Tên bệnh nhân</th>
+                                        <th scope="col">Giới tính</th>
+                                        <th scope="col">Ngày sinh</th>
+                                        <th scope="col">Ngày dk khám</th>
+                                        <th scope="col">Địa chỉ </th>
+                                        <th scope="col">Số điện thoại </th>
+                                        <th scope="col">Lịch sử bệnh </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for t in get_patient %}
+                                        <tr>
+
+                                            <th scope="row">{{t.id}}</th>
+                                            <td>{{t.name}}</td>
+                                            <td>{{t.gender}}</td>
+                                            <td>{{t.date_of_birth}}</td>
+                                            <td>{{t.date_appointment}}</td>
+                                            <td>{{t.address}}</td>
+                                            <td>{{t.phone}}</td>
+                                            <td>{{t.disease_history}}</td>
+
+                                        </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+ <div class="content-wrapper">
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="card w-100">
+                        <div class="card-body">
+                            <form action="/phieukham/update/{{task.id}}" method="POST">
+                                <div class="form-group">
+                                    <label>Số lượng</label>
+                                    <input type="text" name="soluong" value="{{task.soluong}}" class="form-control" placeholder="Enter name">
+                                </div>
+                                <div class="form-group">
+                                    <label>Mã phiếu khám</label></br>
+                                    <select name="phieukham_id" class="custom-select">
+                                        {% for t in get_phieukham %}
+                                        <option value="{{t.id}}">{{t.id}}</option>
+                                         {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Mã thuốc</label></br>
+                                    <select name="thuoc_id" class="custom-select">
+                                        {% for t in get_medicine %}
+                                        <option value="{{t.id}}">{{t.medicine_name}}</option>
+                                         {% endfor %}
+                                    </select>
+                                </div>
+
+                                <button type="submit" value="Submit" class="btn btn-primary ">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}

@@ -1,12 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
-from app.models import Medicine, UserRoleEnum, Patient
+from app.models import Medicine, UserRoleEnum, Patient, MedicalReport, Prescription
 import dao
-import form
-from form import PatientForm
-from wtforms import validators
-from flask_wtf import FlaskForm
-import flask_wtf as wtf
-from app import app, db, utils, login
+
+from app import app, db, utils, login, form
 from flask_login import login_user, logout_user, login_required, current_user
 
 
@@ -213,21 +209,21 @@ def user_load(user_id):
 
 
 # them sua xóa thuốc
-@app.route('/medicine/index')
+@app.route('/admin/medicine/index')
 def medicine():
     if current_user.user_role == UserRoleEnum.ADMIN:
         if request.method.__eq__('GET'):
             get_medicine = dao.get_medicine()
-        return render_template('medicine/index.html', thuoc=get_medicine, UserRoleEnum=UserRoleEnum)
+        return render_template('admin/medicine/index.html', thuoc=get_medicine, UserRoleEnum=UserRoleEnum)
     else:
         return redirect(url_for('index'))
 
-@app.route('/medicine/create')
+@app.route('/admin/medicine/create')
 def medicine_add():
     # validation = form.MedicineForm(request.form)
-    return render_template('medicine/create.html', UserRoleEnum=UserRoleEnum)
+    return render_template('admin/medicine/create.html', UserRoleEnum=UserRoleEnum)
 
-@app.route('/medicine/create/submit', methods=['POST'])
+@app.route('/admin/medicine/create/submit', methods=['POST'])
 def medicine_submit():
     err_msg = ""
     # validation = form.MedicineForm(request.form)
@@ -246,20 +242,20 @@ def medicine_submit():
         try:
             if medicine_name == "" or how_to_use == "":
                 err_msg = 'Vui lòng nhập đầy đủ thông tin'
-                return render_template('medicine/create.html', err_msg=err_msg, UserRoleEnum=UserRoleEnum)
+                return render_template('admin/medicine/create.html', err_msg=err_msg, UserRoleEnum=UserRoleEnum)
             else:
                 medicine = Medicine(medicine_name=medicine_name, how_to_use=how_to_use, price=price,
                                     unit_name=unit_name)
                 db.session.add(medicine)
                 db.session.commit()
                 flash('Thêm thành công')
-                return redirect('/medicine/index')
+                return redirect('/admin/medicine/index')
         except:
             return 'Thuốc đã có sẵn vui lòng kiểm tra lại'
 
-    return render_template('medicine/create.html', UserRoleEnum=UserRoleEnum)
+    return render_template('admin/medicine/create.html', UserRoleEnum=UserRoleEnum)
 
-@app.route('/medicine/update/<int:id>', methods=['GET', 'POST'])
+@app.route('/admin/medicine/update/<int:id>', methods=['GET', 'POST'])
 def update_medicine(id):
     task = Medicine.query.get_or_404(id)
     if request.method == "POST":
@@ -271,25 +267,170 @@ def update_medicine(id):
         try:
             if task.medicine_name == "" or task.how_to_use == "":
                 err_msg = 'Vui lòng nhập đầy đủ thông tin'
-                return render_template('medicine/update.html', err_msg=err_msg, UserRoleEnum=UserRoleEnum)
+                return render_template('admin/medicine/update.html', err_msg=err_msg, UserRoleEnum=UserRoleEnum)
             else:
                 db.session.commit()
-                return redirect('/medicine/index')
+                return redirect('/admin/medicine/index')
         except:
             return 'Thuốc đã có sẵn vui lòng kiểm tra lại'
 
     else:
-        return render_template('medicine/update.html', task=task, UserRoleEnum=UserRoleEnum)
+        return render_template('admin/medicine/update.html', task=task, UserRoleEnum=UserRoleEnum)
 
 
-@app.route('/medicine/delete/<int:id>')
+@app.route('/admin/medicine/delete/<int:id>')
 def delete_medicine(id):
     task_to_delete = Medicine.query.get_or_404(id)
 
     try:
         db.session.delete(task_to_delete)
         db.session.commit()
-        return redirect('/medicine/index')
+        return redirect('/admin/medicine/index')
+    except:
+        return 'Có lỗi sảy ra khi xóa'
+
+
+
+# them sua xoa phieu kham
+@app.route('/doctor/index')
+def phieukham():
+    get_phieukham = dao.get_phieukham()
+    return render_template('doctor/index.html', get_phieukham=get_phieukham, UserRoleEnum=UserRoleEnum)
+
+@app.route('/doctor/create')
+def phieukham_add():
+    get_patient = dao.get_patient()
+    return render_template('doctor/create.html', get_patient=get_patient, UserRoleEnum=UserRoleEnum)
+
+
+@app.route('/doctor/create/submit', methods=['POST'])
+def phieukham_submit():
+    # validation = form.MedicalCertificateForm(request.form)
+    # if request.method == 'POST' and validation.validate():
+    #     phieukham = MedicalCertificate(validation.date_examination.data, validation.symptom.data,
+    #                                    validation.sickness.data, validation.sum_price.data,
+    #                                    validation.patient_id.data,)
+    #     db.session.add(phieukham)
+    #     flash('Tạo thành công')
+    #     return redirect('/doctor/index')
+    # return render_template('doctor/create.html', validation=validation, UserRoleEnum=UserRoleEnum)
+    if request.method == "POST":
+        date_examination = request.form['date_examination']
+        symptom = request.form['symptom']
+        disease_name = request.form['disease_name']
+        total_amount = request.form['total_amount']
+        patient_id = request.form['patient_id']
+
+
+        phieukham = MedicalReport(date_examination = date_examination, symptom = symptom, disease_name=disease_name, total_amount=total_amount, patient_id=patient_id)
+
+        db.session.add(phieukham)
+        db.session.commit()
+
+    return redirect('/doctor/index')
+
+@app.route('/doctor/update/<int:id>', methods=['GET', 'POST'])
+def update_phieukham(id):
+    task = MedicalReport.query.get_or_404(id)
+    get_patient = dao.get_patient()
+    if request.method == "POST":
+        task.date_examination = request.form['date_examination']
+        task.symptom = request.form['symptom']
+        task.disease_name = request.form['disease_name']
+        task.total_amount = request.form['total_amount']
+        task.patient_id = request.form['patient_id']
+        try:
+            db.session.commit()
+            return redirect('/doctor/index')
+        except:
+            return 'Có lỗi sẩy ra khi cập nhật'
+
+    else:
+        return render_template('doctor/update.html', task=task,get_patient=get_patient, UserRoleEnum=UserRoleEnum)
+
+@app.route('/doctor/delete/<int:id>')
+def delete_phieukham(id):
+    task_to_delete = MedicalReport.query.get_or_404(id)
+
+    try:
+        db.session.delete(task_to_delete)
+        db.session.commit()
+        return redirect('/doctor/index')
+    except:
+        return 'Có lỗi sảy ra khi xóa'
+
+
+# kiem tra thuoc
+@app.route('/doctor/check-medicine')
+def check_medicine():
+    if current_user.user_role == UserRoleEnum.DOCTOR:
+        if request.method.__eq__('GET'):
+            get_medicine = dao.get_medicine()
+        return render_template('doctor/check-medicine.html', thuoc=get_medicine, UserRoleEnum=UserRoleEnum)
+    else:
+        return redirect(url_for('index'))
+
+# kiem tra benh nhan
+@app.route('/doctor/check-disease-history')
+def patientlist():
+    get_patient = dao.get_patient()
+    return render_template('doctor/check-disease-history.html', get_patient=get_patient, UserRoleEnum=UserRoleEnum)
+
+# them don thuoc
+@app.route('/doctor/prescription/index')
+def donthuoc():
+    get_prescription = dao.get_prescription()
+    return render_template('doctor/prescription/index.html', get_prescription=get_prescription, UserRoleEnum=UserRoleEnum)
+
+
+@app.route('/doctor/prescription/create')
+def donthuoc_add():
+    get_medicine = dao.get_medicine()
+    get_phieukham = dao.get_phieukham()
+    return render_template('doctor/prescription/create.html', get_medicine=get_medicine, get_phieukham=get_phieukham, UserRoleEnum=UserRoleEnum)
+
+
+@app.route('/doctor/prescription/create/submit', methods=['POST'])
+def donthuoc_submit():
+    if request.method == "POST":
+        count = request.form['count']
+        medical_report_id = request.form['medical_report_id']
+        medicine_id = request.form['medicine_id']
+
+
+        donthuoc = Prescription(count = count, medical_report_id = medical_report_id, medicine_id=medicine_id)
+
+        db.session.add(donthuoc)
+        db.session.commit()
+
+    return redirect('/doctor/prescription/index')
+
+@app.route('/doctor/prescription/update/<int:phieukham_id><int:thuoc_id>', methods=['GET', 'POST'])
+def update_donthuoc(phieukham_id,thuoc_id):
+    task = Prescription.query.get_or_404(phieukham_id,thuoc_id)
+    get_medicine = dao.get_medicine()
+    get_phieukham = dao.get_phieukham()
+    if request.method == "POST":
+        task.count = request.form['count']
+        task.phieukham_id = request.form['phieukham_id']
+        task.thuoc_id = request.form['thuoc_id']
+        try:
+            db.session.commit()
+            return redirect('/donthuoc/index')
+        except:
+            return 'Có lỗi sẩy ra khi cập nhật'
+
+    else:
+        return render_template('donthuoc/update.html', task=task,get_medicine=get_medicine,get_phieukham=get_phieukham)
+
+@app.route('/doctor/prescription/delete/<int:phieukham_id><int:thuoc_id>')
+def delete_donthuoc(phieukham_id,thuoc_id):
+    task_to_delete = Prescription.query.get_or_404(phieukham_id,thuoc_id)
+
+    try:
+        db.session.delete(task_to_delete)
+        db.session.commit()
+        return redirect('/donthuoc/index')
     except:
         return 'Có lỗi xảy ra khi xóa'
 
