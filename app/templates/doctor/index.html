@@ -1,0 +1,58 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+    <div class="content-wrapper">
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                            <a href="/doctor/create" class="btn btn-success float-right m-2">Add</a>
+                    </div>
+                    <div class="card w-100">
+                        <div class="card-body">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Ngày khám</th>
+                                        <th scope="col">Triệu chứng</th>
+                                        <th scope="col">Loại bệnh</th>
+                                        <th scope="col">Tổng tiền</th>
+                                        <th scope="col">patient_id</th>
+                                        <th scope="col">manament</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for t in get_phieukham %}
+                                        <tr>
+
+                                            <th scope="row">{{t.id}}</th>
+                                            <td>{{t.date_examination}}</td>
+                                            <td>{{t.symptom}}</td>
+                                            <td>{{t.disease_name}}</td>
+                                            <td>{{t.total_amount}}</td>
+                                            <td>{{t.patient_id}}</td>
+                                            <td>
+                                                    <a href="/doctor/update/{{t.id}}"
+                                                        class="btn btn-warning">Edit</a>
+                                                    <a onclick="return confirm('Bạn có chắc chắn muốn xóa không?');" href="/doctor/delete/{{t.id}}"
+                                                        class="btn btn-danger">Delete</a>
+                                                    <a href="/api/pay"
+                                                        class="btn btn-success">Thanh toán hóa đơn</a>
+                                            </td>
+
+                                        </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

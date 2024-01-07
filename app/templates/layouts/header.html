@@ -20,11 +20,11 @@
             <a class="nav-link" href="{{ url_for('nurse_appointment_list')}}">Quản lý danh sách khám</a>
           </li>
           {% endif %}
-          {% if current_user.is_authenticated and current_user.user_role == UserRoleEnum.ADMIN %}
-          <li class="nav-item">
-            <a class="nav-link" href="/medicine/index">Thuốc</a>
-          </li>
-          {% endif %}
+<!--          {% if current_user.is_authenticated and current_user.user_role == UserRoleEnum.ADMIN %}-->
+<!--          <li class="nav-item">-->
+<!--            <a class="nav-link" href="/admin/medicine/index">Thuốc</a>-->
+<!--          </li>-->
+<!--          {% endif %}-->
           {% if current_user.is_authenticated and current_user.user_role == UserRoleEnum.CASHIER %}
           <li class="nav-item">
             <a class="nav-link" href="javascript:void(0)">Lập hóa đơn</a>
@@ -32,13 +32,16 @@
           {% endif %}
           {% if current_user.is_authenticated and current_user.user_role == UserRoleEnum.DOCTOR %}
           <li class="nav-item">
-            <a class="nav-link" href="javascript:void(0)">Lập phiếu khám</a>
+            <a class="nav-link" href="/doctor/index">Lập phiếu khám</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="javascript:void(0)">Tra cứu thuốc</a>
+            <a class="nav-link" href="/doctor/check-medicine">Tra cứu thuốc</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="javascript:void(0)">Xem lịch sử bệnh</a>
+            <a class="nav-link" href="/doctor/check-disease-history">Xem lịch sử bệnh</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/doctor/prescription/index">Lên đơn thuốc</a>
           </li>
           {% endif %}
           <li class="nav-item">
