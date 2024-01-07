@@ -2,7 +2,10 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from app.models import Medicine, UserRoleEnum, Patient
 import dao
 import form
+from form import PatientForm
 from wtforms import validators
+from flask_wtf import FlaskForm
+import flask_wtf as wtf
 from app import app, db, utils, login
 from flask_login import login_user, logout_user, login_required, current_user
 
@@ -76,7 +79,41 @@ def nurse_appointment_list():
         return redirect(url_for('index'))
 
 
-# Y TÁ ĐĂNG KÝ KHÁM HỘ
+@app.route('/appointment-list/edit/<int:id>', methods=['get', 'post'])
+def nurse_edit_appointment(id):
+    if current_user.user_role == UserRoleEnum.NURSE:
+        patient = Patient.query.get_or_404(id)
+        if request.method.__eq__('POST'):
+            patient.name = request.form.get('name')
+            patient.gender = request.form.get('name')
+            patient.date_appointment = request.form.get('date_appointment')
+            patient.date_of_birth = request.form.get('date_of_birth')
+            patient.address = request.form.get('address')
+            patient.disease_history = request.form.get('disease_history')
+            patient.tel = request.form.get('tel')
+            db.session.commit()
+            return redirect(url_for('nurse_appointment_list', UserRoleEnum=UserRoleEnum))
+            flash('Chỉnh sửa bệnh nhân thành công')
+        # form.name.data = patient.name
+        # form.gender = patient.gender
+        # form.date_appointment = patient.date_appointment
+        # form.date_of_birth = patient.date_of_birth
+        # form.address = patient.address
+        # form.disease_history = patient.disease_history
+        return render_template('nurse/update_appointment.html', patient=patient,UserRoleEnum=UserRoleEnum)
+
+@app.route('/appointment-list/delete/<int:id>')
+def nurse_delete_appointment(id):
+    patient = Patient.query.get_or_404(id)
+
+    try:
+        db.session.delete(patient)
+        db.session.commit()
+        return redirect('/appointment-list')
+    except:
+        return 'Có lỗi xảy ra khi xóa'
+
+# Y TÁ GHI DANH BỆNH NHÂN
 @app.route('/add_appointment', methods=['get', 'post'])
 def nurse_add_appointment():
     # CHECK ROLE Y TÁ
@@ -90,6 +127,7 @@ def nurse_add_appointment():
             date_of_birth = request.form.get('date_of_birth')
             address = request.form.get('address')
             disease_history = request.form.get('disease_history')
+            tel = request.form.get('tel')
 
             try:
                 count = Patient.query.filter_by(date_appointment=date_appointment).count()
@@ -97,7 +135,7 @@ def nurse_add_appointment():
                     err_msg = 'Ngày đăng ký khám đã hết chỗ'
                     return render_template('nurse/add_appointment.html', err_msg=err_msg, UserRoleEnum=UserRoleEnum)
                 utils.add_appointment(name=name, gender=gender, date_appointment=date_appointment,
-                                      date_of_birth=date_of_birth, address=address, disease_history=disease_history)
+                                      date_of_birth=date_of_birth, address=address, disease_history=disease_history, tel=tel)
             except Exception as ex:
                 err_msg = 'Thêm bệnh nhân không thành công' + str(ex)
             else:
@@ -121,20 +159,21 @@ def user_appointment():
             date_of_birth = request.form.get('date_of_birth')
             address = request.form.get('address')
             disease_history = request.form.get('disease_history')
+            tel = request.form.get('tel')
 
             try:
                 count = Patient.query.filter_by(date_appointment=date_appointment).count()
                 if count == 10 or count > 10:
                     err_msg = 'Ngày đăng ký khám đã hết chỗ'
-                    return render_template('patient/appointment.html', err_msg=err_msg, UserRoleEnum=UserRoleEnum)
+                    return render_template('patient/update_appointment.html', err_msg=err_msg, UserRoleEnum=UserRoleEnum)
                 utils.add_appointment(name=name, gender=gender, date_appointment=date_appointment,
-                                      date_of_birth=date_of_birth, address=address, disease_history=disease_history)
+                                      date_of_birth=date_of_birth, address=address, disease_history=disease_history, tel=tel)
             except Exception as ex:
                 err_msg = 'Đăng ký khám không thành công' + str(ex)
             else:
                 sc_msg = 'Đăng ký khám thành công'
-                return render_template('patient/appointment.html', sc_msg=sc_msg, UserRoleEnum=UserRoleEnum)
-        return render_template('patient/appointment.html', err_msg=err_msg, UserRoleEnum=UserRoleEnum)
+                return render_template('patient/update_appointment.html', sc_msg=sc_msg, UserRoleEnum=UserRoleEnum)
+        return render_template('patient/update_appointment.html', err_msg=err_msg, UserRoleEnum=UserRoleEnum)
     else:
         return redirect(url_for('index'))
 
@@ -252,7 +291,7 @@ def delete_medicine(id):
         db.session.commit()
         return redirect('/medicine/index')
     except:
-        return 'Có lỗi sảy ra khi xóa'
+        return 'Có lỗi xảy ra khi xóa'
 
 
 

@@ -45,6 +45,7 @@ class Patient(db.Model):
     date_of_birth = Column(DateTime, nullable=True)
     address = Column(String(100), nullable=True)
     disease_history = Column(String(100), nullable=True)
+    tel = Column(String(20), nullable=True)
     phieukhams = relationship('PhieuKham', backref='patient')
     # date_id = Column(Integer, ForeignKey('dateappointment.id'))
     # date_appointment = relationship('DateAppointment', back_populates='patients')

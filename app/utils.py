@@ -11,8 +11,8 @@ def add_user(name, username, password, **kwargs):
     db.session.commit()
 
 # bệnh nhân đăng ký khám
-def add_appointment(name,gender, date_appointment, date_of_birth, address, disease_history):
-    patient_appointment = Patient(name=name.strip(),gender=gender,date_appointment=date_appointment, date_of_birth=date_of_birth,address=address.strip(),disease_history=disease_history.strip())
+def add_appointment(name,gender, date_appointment, date_of_birth, address, disease_history, tel):
+    patient_appointment = Patient(name=name.strip(),gender=gender,date_appointment=date_appointment, date_of_birth=date_of_birth,address=address.strip(),disease_history=disease_history.strip(), tel = tel.strip())
 
     db.session.add(patient_appointment)
     db.session.commit()
