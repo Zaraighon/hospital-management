@@ -109,17 +109,17 @@ if __name__ == '__main__':
     with app.app_context():
         db.create_all()
 
-        # import hashlib
-        #
-        # u = User(name='Admin', username='admin',
-        #          password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()), user_role=UserRoleEnum.ADMIN)
-        # p = User(name='Patient1', username='patient1',
-        #          password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()), user_role=UserRoleEnum.PATIENT)
-        # n = User(name='Nurse1', username='nurse1',
-        #          password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()), user_role=UserRoleEnum.NURSE)
-        # d = User(name='doctor1', username='doctor1',
-        #          password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()), user_role=UserRoleEnum.DOCTOR)
-        # c = User(name='cashier1', username='cashier1',
-        #          password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()), user_role=UserRoleEnum.CASHIER)
-        # db.session.add_all([u, p, n, d, c])
-        # db.session.commit()
+        import hashlib
+
+        u = User(name='Admin', username='admin',
+                 password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()), user_role=UserRoleEnum.ADMIN)
+        p = User(name='Patient1', username='patient1',
+                 password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()), user_role=UserRoleEnum.PATIENT)
+        n = User(name='Nurse1', username='nurse1',
+                 password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()), user_role=UserRoleEnum.NURSE)
+        d = User(name='doctor1', username='doctor1',
+                 password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()), user_role=UserRoleEnum.DOCTOR)
+        c = User(name='cashier1', username='cashier1',
+                 password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()), user_role=UserRoleEnum.CASHIER)
+        db.session.add_all([u, p, n, d, c])
+        db.session.commit()

@@ -183,17 +183,25 @@ def medicine():
 
 @app.route('/medicine/create')
 def medicine_add():
+    # validation = form.MedicineForm(request.form)
     return render_template('medicine/create.html', UserRoleEnum=UserRoleEnum)
 
 @app.route('/medicine/create/submit', methods=['POST'])
 def medicine_submit():
     err_msg = ""
+    # validation = form.MedicineForm(request.form)
     if request.method == "POST":
+        # and validation.validate()
         medicine_name = request.form['medicine_name']
         how_to_use = request.form['how_to_use']
         price = request.form['price']
         unit_name = request.form['unit_name']
-
+        #
+        # medicine = Medicine(medicine_name=medicine_name, how_to_use=how_to_use, price=price, unit_name=unit_name)
+        # db.session.add(medicine)
+        # db.session.commit()
+        # flash('Thêm thành công')
+        # return redirect('/medicine/index')
         try:
             if medicine_name == "" or how_to_use == "":
                 err_msg = 'Vui lòng nhập đầy đủ thông tin'
@@ -203,9 +211,12 @@ def medicine_submit():
                                     unit_name=unit_name)
                 db.session.add(medicine)
                 db.session.commit()
+                flash('Thêm thành công')
+                return redirect('/medicine/index')
         except:
             return 'Thuốc đã có sẵn vui lòng kiểm tra lại'
-    return redirect('/medicine/index')
+
+    return render_template('medicine/create.html', UserRoleEnum=UserRoleEnum)
 
 @app.route('/medicine/update/<int:id>', methods=['GET', 'POST'])
 def update_medicine(id):
