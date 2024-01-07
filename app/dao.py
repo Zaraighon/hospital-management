@@ -1,12 +1,26 @@
 from sqlalchemy.dialects import mysql
 
-from app.models import Medicine, Patient
+from app.models import Medicine, Patient, MedicalReport, Prescription
 from flask import Flask, render_template, request, redirect, url_for, flash
 from app import app,db
 
 
 def get_medicine():
     return Medicine.query.all()
+
+
+# lấy thông tin pk
+def get_phieukham():
+    return MedicalReport.query.all()
+
+# lấy bệnh nhân
+def get_patient():
+    return Patient.query.all()
+
+
+# lấy Đơn thuốc
+def get_prescription():
+    return Prescription.query.all()
 
 
 def insert_medicine():

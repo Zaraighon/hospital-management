@@ -1,0 +1,55 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+    <div class="content-wrapper">
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                            <a href="/admin/medicine/create" class="btn btn-success float-right m-2">Add</a>
+                    </div>
+                    <div class="card w-100">
+                        <div class="card-body">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Tên thuốc</th>
+                                        <th scope="col">Cách dùng</th>
+                                        <th scope="col">Giá</th>
+                                        <th scope="col">Đơn vị</th>
+                                        <th scope="col">manament</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for t in thuoc %}
+                                        <tr>
+
+                                            <th scope="row">{{t.id}}</th>
+                                            <td>{{t.medicine_name}}</td>
+                                            <td>{{t.how_to_use}}</td>
+                                            <td>{{t.price}}</td>
+                                            <td>{{t.unit_name}}</td>
+
+                                            <td>
+                                                    <a href="/admin/medicine/update/{{t.id}}"
+                                                        class="btn btn-warning">Edit</a>
+                                                    <a onclick="return confirm('Bạn có chắc chắn muốn xóa không?');" href="/admin/medicine/delete/{{t.id}}"
+                                                        class="btn btn-danger">Delete</a>
+                                            </td>
+
+                                        </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

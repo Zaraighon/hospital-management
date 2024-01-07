@@ -45,7 +45,7 @@ class Patient(db.Model):
     date_of_birth = Column(DateTime, nullable=True)
     address = Column(String(100), nullable=True)
     disease_history = Column(String(100), nullable=True)
-    phieukhams = relationship('PhieuKham', backref='patient')
+    medicalreports = relationship('MedicalReport', backref='patient')
     # date_id = Column(Integer, ForeignKey('dateappointment.id'))
     # date_appointment = relationship('DateAppointment', back_populates='patients')
 
@@ -73,33 +73,34 @@ class Medicine(BaseModel):
         return self.medicine_name
 
 
-class PhieuKham(BaseModel):
-    __tablename__ = 'phieukham'
+class MedicalReport(BaseModel):
+    __tablename__ = 'medicalreport'
 
-    ngaykham = Column(DateTime, default=datetime.now())
-    trieuchung = Column(String(255), nullable=False)
-    loaibenh = Column(String(50), nullable=False)
+    date_examination = Column(DateTime, default=datetime.now())
+    symptom = Column(String(255), nullable=False)
+    disease_name = Column(String(50), nullable=False)
     price = Column(Float, default=100000)
-    receipt = relationship('Receipt', backref='phieukham', lazy=True)
-    donthuoc = relationship('DonThuoc',backref='phieukham', lazy=True)
+    total_amount = Column(Float, nullable=False)
+    receipt = relationship('Receipt', backref='medicalreport', lazy=True)
+    prescription = relationship('Prescription',backref='medicalreport', lazy=True)
     patient_id = Column(Integer, ForeignKey('patient.id'))
 
 
-class DonThuoc(db.Model):
-    __tablename__ = 'donthuoc'
+class Prescription(db.Model):
+    __tablename__ = 'prescription'
 
     # id = Column(Integer, primary_key=True, autoincrement=True)
 
-    phieukham_id = Column(Integer, ForeignKey(PhieuKham.id), primary_key=True)
-    thuoc_id = Column(Integer, ForeignKey(Medicine.id), primary_key=True)
-    soluong = Column(Integer, nullable=False)
+    medical_report_id = Column(Integer, ForeignKey(MedicalReport.id), primary_key=True)
+    medicine_id = Column(Integer, ForeignKey(Medicine.id), primary_key=True)
+    count = Column(Integer, nullable=False)
 
 
 class Receipt(BaseModel):
     __tablename__ = 'receipt'
 
     user_id = Column(Integer, ForeignKey(User.id), nullable=True)
-    phieukham_id = Column(Integer, ForeignKey(PhieuKham.id))
+    medical_report_id = Column(Integer, ForeignKey(MedicalReport.id))
     price = Column(Float, default=0)
 
 

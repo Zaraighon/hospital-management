@@ -5,12 +5,9 @@
         <div class="content">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-md-12">
-                            <a href="/medicine/create" class="btn btn-success float-right m-2">Add</a>
-                    </div>
                     <div class="card w-100">
                         <div class="card-body">
-                            <table class="table table-striped">
+                            <table id="myTable" class="table">
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
@@ -18,7 +15,6 @@
                                         <th scope="col">Cách dùng</th>
                                         <th scope="col">Giá</th>
                                         <th scope="col">Đơn vị</th>
-                                        <th scope="col">manament</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -31,12 +27,7 @@
                                             <td>{{t.price}}</td>
                                             <td>{{t.unit_name}}</td>
 
-                                            <td>
-                                                    <a href="/medicine/update/{{t.id}}"
-                                                        class="btn btn-warning">Edit</a>
-                                                    <a href="/medicine/delete/{{t.id}}"
-                                                        class="btn btn-danger">Delete</a>
-                                            </td>
+
 
                                         </tr>
                                 {% endfor %}
@@ -52,4 +43,11 @@
         </div>
 
     </div>
+{% endblock %}
+{% block scripts %}
+  <script>
+    $(document).ready(function () {
+      $('#myTable').DataTable();
+    });
+  </script>
 {% endblock %}
