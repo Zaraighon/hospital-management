@@ -14,3 +14,65 @@
 <!--                                {% endif %}-->
 </body>
 </html>
+
+
+
+<h1>Biểu đồ số bệnh nhân theo ngày</h1>
+    <!-- Tạo thẻ canvas có id là "myChart" -->
+    <canvas id="myChart" width="800" height="600"></canvas>
+    <script>
+        window.onload = function() {
+
+            const ctx = document.getElementById('myChart');
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: {{ labels|safe }},
+                    datasets: [{
+                        label: '# Số bệnh nhân',
+                        data: {{ data|safe }},
+                        borderWidth: 1,
+                        backgroundColor: ['red', 'green', 'blue', 'gold', 'brown']
+                    }]
+                },
+                options: {
+                    scales: {
+                        xAxes: [
+        {
+          type: "time", // Đặt kiểu trục x là time
+          time: {
+            parser: "YYYY-MM-DD", // Định dạng chuỗi datetime
+            displayFormats: {
+              // Định dạng hiển thị cho các đơn vị thời gian khác nhau
+              millisecond: "HH:mm:ss.SSS",
+              second: "HH:mm:ss",
+              minute: "HH:mm",
+              hour: "HH:mm",
+              day: "DD/MM/YYYY",
+              week: "DD/MM/YYYY",
+              month: "MM/YYYY",
+              quarter: "MM/YYYY",
+              year: "YYYY",
+            },
+          },
+        },
+      ],
+                    }
+                }
+            });
+        }
+    </script>
+
+
+date_chart = dao.date_chart()
+    result = dao.count_patients_by_date()
+    # Tạo hai danh sách để lưu nhãn và dữ liệu cho biểu đồ
+    labels = []
+    data = []
+    # Duyệt qua kết quả và thêm vào danh sách
+    for row in result:
+        labels.append(row[0])
+        data.append(row[1])  # Thêm số bệnh nhân vào dữ liệu
+    # Trả về template HTML với các tham số là nhãn và dữ liệu
+    return render_template('admin/index.html', UserRoleEnum=UserRoleEnum, labels=labels, data=data, date_chart=date_chart)
