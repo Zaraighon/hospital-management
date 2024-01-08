@@ -1,8 +1,12 @@
 from sqlalchemy.dialects import mysql
-
+from sqlalchemy import create_engine, Column, Integer, String, Date, distinct
 from app.models import Medicine, Patient, MedicalReport, Prescription
-from flask import Flask, render_template, request, redirect, url_for, flash
-from app import app,db
+from flask import Flask, render_template, request, redirect, url_for, flash, session
+from app import app, db
+import math
+import logging
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import func
 
 
 def get_medicine():
@@ -36,3 +40,13 @@ def insert_medicine():
         mysql.connection.commit()
 
 
+def date_chart():
+    return db.session.query(distinct(Patient.date_appointment)).order_by(Patient.date_appointment).all()
+
+def count_patients_by_date():
+    # Sử dụng hàm func.count() để đếm số bệnh nhân
+    # Sử dụng hàm func.date() để lấy phần ngày từ date_appointment
+    # Sử dụng hàm group_by() để nhóm theo ngày
+    # Sử dụng hàm order_by() để sắp xếp theo ngày
+    result = db.session.query(func.date(Patient.date_appointment), func.count(Patient.id)).group_by(func.date(Patient.date_appointment)).order_by(func.date(Patient.date_appointment)).all()
+    return result
