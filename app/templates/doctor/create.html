@@ -28,7 +28,7 @@
                                     <label>Bệnh nhân</label></br>
                                     <select name="patient_id" class="custom-select">
                                         {% for t in get_patient %}
-                                        <option value="{{t.id}}">Tên: {{t.name}} || phone {{t.phone}}</option>
+                                        <option value="{{t.id}}">Tên: {{t.name}} || phone {{t.tel}}</option>
                                          {% endfor %}
                                     </select>
                                 </div>
