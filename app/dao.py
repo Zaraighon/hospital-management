@@ -51,3 +51,12 @@ def count_patients_by_date():
     result = (db.session.query(func.date(Medicine.created_date), func.count(Medicine.id)).group_by(func.date(Medicine.created_date))
               .order_by(func.date(Medicine.created_date)).all())
     return result
+
+def revenue_mon_stats(year=2024):
+    query = db.session.query(func.extract('month', Prescription.created_date),
+                             func.sum(Prescription.count*Medicine.price))\
+              .join(ReceiptDetails, ReceiptDetails.receipt_id.__eq__(Receipt.id))\
+              .filter(func.extract('year', Receipt.created_date).__eq__(year))\
+              .group_by(func.extract('month', Receipt.created_date))
+
+    return query.all()

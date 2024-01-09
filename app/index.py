@@ -4,24 +4,50 @@ import dao
 from app import app, db, utils, login, form
 from flask_login import login_user, logout_user, login_required, current_user
 import datetime
+from sqlalchemy import func, extract
 
 
 @app.route('/')
 def index():
     return render_template('index.html', UserRoleEnum=UserRoleEnum)
 
+# Tạo route để hiển thị biểu đồ doanh thu
+@app.route('/admin/tkdt')
+def revenue_chart(year=2024, month=3):
+    # Tạo câu truy vấn để lấy doanh thu theo ngày trong tháng
+    query = db.session.query(extract('day', Prescription.created_date),
+                             func.sum(Medicine.price * Prescription.count))\
+              .join(Medicine, Medicine.id == Prescription.medicine_id)\
+              .filter(extract('year', Prescription.created_date) == year)\
+              .filter(extract('month', Prescription.created_date) == month)\
+              .group_by(extract('day', Prescription.created_date))
+
+    # Lấy kết quả truy vấn và chuyển thành danh sách
+    results = query.all()
+    days = [r[0] for r in results]
+    revenues = [r[1] for r in results]
+
+    # Truyền dữ liệu vào template để vẽ biểu đồ
+    return render_template('admin/tkdt.html', days=days, revenues=revenues, year=year, month=month, UserRoleEnum=UserRoleEnum)
+
 
 @app.route('/admin/tkbc')
-def tkbc():
-    date_chart = dao.date_chart()
-    result = dao.count_patients_by_date()
-    # Tạo hai danh sách để lưu nhãn và dữ liệu cho biểu đồ
-    data = []
-    # Duyệt qua kết quả và thêm vào danh sách
-    for row in result:
-        data.append(row[1])  # Thêm số bệnh nhân vào dữ liệu
-    # Trả về template HTML với các tham số là nhãn và dữ liệu
-    return render_template('admin/tkbc.html', UserRoleEnum=UserRoleEnum, data=data, date_chart=date_chart)
+def tkbc(year=2024, month=3):
+    # Tạo câu truy vấn để lấy số thuốc đã sử dụng theo ngày trong tháng
+    query = db.session.query(extract('day', Prescription.created_date),
+                             func.sum(Prescription.count)) \
+        .join(Medicine, Medicine.id == Prescription.medicine_id) \
+        .filter(extract('year', Prescription.created_date) == year) \
+        .filter(extract('month', Prescription.created_date) == month) \
+        .group_by(extract('day', Prescription.created_date))
+
+    # Lấy kết quả truy vấn và chuyển thành danh sách
+    results = query.all()
+    days = [r[0] for r in results]
+    counts = list(map(int, [r[1] for r in results]))
+
+    # Truyền dữ liệu vào template để vẽ biểu đồ
+    return render_template('admin/tkbc.html', days=days, counts=counts, year=year, month=month, UserRoleEnum=UserRoleEnum)
 
 @app.route('/admin')
 def admin():
