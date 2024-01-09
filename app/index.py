@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
-from app.models import Medicine, UserRoleEnum, Patient, MedicalReport, Prescription,Rule
+from app.models import Medicine, UserRoleEnum, Patient, MedicalReport, Prescription, Rule, Receipt
 from flask import Flask, render_template, request, redirect, url_for, flash, json
 from app.models import Medicine, UserRoleEnum, Patient, MedicalReport, Prescription
 import dao
@@ -131,13 +131,29 @@ def export_receipt(id):
     if current_user.user_role == UserRoleEnum.CASHIER:
         patient = Patient.query.get_or_404(id)
         medical_report = MedicalReport.query.filter_by(id=patient.id).first()
+        receipt = Receipt.query.filter_by(medical_report_id=medical_report.id).first()
         prescriptions = Prescription.query.filter_by(medical_report_id=medical_report.id).all()
         medicines=[]
         for prescription in prescriptions:
             medicine = Medicine.query.filter_by(id=prescription.medicine_id).first()
             if medicine:
                 medicines.append(medicine)
-        return render_template('cashier/export-receipt.html', patient=patient, medical_report=medical_report, prescriptions=prescriptions, medicines=medicines, UserRoleEnum=UserRoleEnum)
+        utils.add_receipt(medical_report_id=medical_report.id,price=0)
+        return render_template('cashier/export-receipt.html', patient=patient,receipt=receipt, medical_report=medical_report, prescriptions=prescriptions, medicines=medicines, UserRoleEnum=UserRoleEnum)
+# @app.route('/receipt-list/paid/<int:id>', methods=['get','post'])
+# def paid_receipt(id):
+#     if current_user.user_role == UserRoleEnum.CASHIER:
+#         patient = Patient.query.get_or_404(id)
+#         medical_report = MedicalReport.query.filter_by(id=patient.id).first()
+#         receipt = Receipt.query.filter_by(medical_report_id=medical_report.id).first()
+#         prescriptions = Prescription.query.filter_by(medical_report_id=medical_report.id).all()
+#         medicines=[]
+#         for prescription in prescriptions:
+#             medicine = Medicine.query.filter_by(id=prescription.medicine_id).first()
+#             if medicine:
+#                 medicines.append(medicine)
+#         utils.add_receipt(medical_report_id=medical_report.id,price=0)
+#         return render_template('cashier/export-receipt.html', patient=patient,receipt=receipt, medical_report=medical_report, prescriptions=prescriptions, medicines=medicines, UserRoleEnum=UserRoleEnum)
 
 
 @app.route('/appointment-list/edit/<int:id>', methods=['get', 'post'])

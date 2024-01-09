@@ -10,8 +10,7 @@
         <h1 class="page-title text-secondary-d1">
             Invoice
             <small class="page-info">
-                <i class="fa fa-angle-double-right text-80"></i>
-                ID: #111-222
+
             </small>
         </h1>
 
@@ -70,7 +69,8 @@
 
                             <div class="my-2"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-600 text-90">Ngày khám:</span>{{patient.date_appointment}} </div>
 
-                            <div class="my-2"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-600 text-90">Trạng thái:</span> <span class="badge badge-warning badge-pill px-25">Unpaid</span></div>
+                            <div class="my-2"><i class="fa fa-circle text-blue-m2 text-xs mr-1"></i> <span class="text-600 text-90">Trạng thái:</span>
+                                {% if receipt %}<span  class="badge badge-success badge-pill px-25">Đã thanh toán</span>{% else %}<span  class="badge badge-warning badge-pill px-25">Chưa thanh toán</span>{% endif %}</div>
                         </div>
                     </div>
                     <!-- /.col -->
@@ -163,7 +163,7 @@
 
                     <div>
                         <span class="text-secondary-d1 text-105">Cám ơn đã lựa chọn dịch vụ của chúng tôi</span>
-                        <a href="#" class="btn btn-info btn-bold px-4 float-right mt-3 mt-lg-0">Thanh toán</a>
+                        <a href="" class="btn btn-info btn-bold px-4 float-right mt-3 mt-lg-0">Thanh toán</a>
                     </div>
                 </div>
             </div>
@@ -171,19 +171,5 @@
     </div>
 </div>
 {% endblock %}
-<script>
-    // Ngày mẫu từ cơ sở dữ liệu
-var originalDate = {{patient.date_appointment}};
 
-// Chuyển đổi thành đối tượng Date
-var dateObject = new Date(originalDate);
-
-// Lấy ngày, tháng, năm
-var day = dateObject.getDate();
-var month = dateObject.getMonth() + 1; // Tháng bắt đầu từ 0, nên cần cộng thêm 1
-var year = dateObject.getFullYear();
-
-// Định dạng lại thành "dd-mm-yyyy"
-var formattedDate = (day < 10 ? '0' : '') + day + '-' + (month < 10 ? '0' : '') + month + '-' + year;
-</script>
 

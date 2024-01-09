@@ -108,6 +108,7 @@ class Receipt(BaseModel):
     user_id = Column(Integer, ForeignKey(User.id), nullable=True)
     medical_report_id = Column(Integer, ForeignKey(MedicalReport.id))
     price = Column(Integer, default=0, nullable=True)
+    # paid = Column(Boolean, default=False)
 
 
 class Rule(db.Model):
