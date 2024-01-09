@@ -111,17 +111,47 @@ if __name__ == '__main__':
     with app.app_context():
         db.create_all()
 
-        import hashlib
+        # import hashlib
+        #
+        # u = User(name='Admin', username='admin',
+        #          password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()), user_role=UserRoleEnum.ADMIN)
+        # p = User(name='Patient1', username='patient1',
+        #          password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()), user_role=UserRoleEnum.PATIENT)
+        # n = User(name='Nurse1', username='nurse1',
+        #          password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()), user_role=UserRoleEnum.NURSE)
+        # d = User(name='doctor1', username='doctor1',
+        #          password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()), user_role=UserRoleEnum.DOCTOR)
+        # c = User(name='cashier1', username='cashier1',
+        #          password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()), user_role=UserRoleEnum.CASHIER)
+        #
+        #
+        # db.session.add_all([u, p, n, d, c])
+        # db.session.commit()
 
-        u = User(name='Admin', username='admin',
-                 password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()), user_role=UserRoleEnum.ADMIN)
-        p = User(name='Patient1', username='patient1',
-                 password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()), user_role=UserRoleEnum.PATIENT)
-        n = User(name='Nurse1', username='nurse1',
-                 password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()), user_role=UserRoleEnum.NURSE)
-        d = User(name='doctor1', username='doctor1',
-                 password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()), user_role=UserRoleEnum.DOCTOR)
-        c = User(name='cashier1', username='cashier1',
-                 password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()), user_role=UserRoleEnum.CASHIER)
-        db.session.add_all([u, p, n, d, c])
-        db.session.commit()
+        # a1 = Medicine(medicine_name='Paramol', how_to_use='Trị các bệnh về đau đầu và hạ sốt',
+        #          price=('20000'), unit_name='vĩ')
+        # a2 = Medicine(medicine_name='Paracetamol 500mg', how_to_use='Thuốc giảm đau hạ sốt hiệu quả',
+        #              price=('200000'), unit_name='vĩ')
+        # a3 = Medicine(medicine_name='ZS Chondroitin', how_to_use='Thuốc bổ xương khớp cho người già',
+        #              price=('60000'), unit_name='chai')
+        # a4 = Medicine(medicine_name='Glucosamine Orihiro 1500 mg', how_to_use='Tăng cường sức khỏe xương khớp, cải thiện chức năng vận động',
+        #              price=('100000'), unit_name='viên')
+        # a5 = Medicine(medicine_name='Jpanwell Glucosamine', how_to_use='Viên bổ xương khớp cho người già',
+        #              price=('20000'), unit_name='viên')
+        #
+        # a6 = Medicine(medicine_name='Jpanwell Glucosamine 3g', how_to_use='Viên bổ xương khớp cho người già',
+        #               price=('20000'), unit_name='viên',created_date=('2024-01-10'))
+        # a7 = Medicine(medicine_name='Jpanwell Glucosamine 1g', how_to_use='Viên bổ xương khớp cho người già',
+        #               price=('20000'), unit_name='viên',created_date=('2024-01-10'))
+        # a8 = Medicine(medicine_name='Jpanwell Glucosamine 2g', how_to_use='Viên bổ xương khớp cho người già',
+        #               price=('20000'), unit_name='viên',created_date=('2024-01-11'))
+        # a9 = Medicine(medicine_name='Jpanwell Glucosamine 4g', how_to_use='Viên bổ xương khớp cho người già',
+        #               price=('20000'), unit_name='viên',created_date=('2024-01-11'))
+        # a10 = Medicine(medicine_name='Jpanwell Glucosamine 5g', how_to_use='Viên bổ xương khớp cho người già',
+        #               price=('20000'), unit_name='viên', created_date=('2024-01-11'))
+        #
+        # db.session.add_all([a1, a2, a3, a4, a5, a6, a7, a8, a9, a10])
+        # db.session.commit()
+
+
+

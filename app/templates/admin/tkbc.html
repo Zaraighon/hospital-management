@@ -121,7 +121,7 @@
             <table class="table">
               <tr>
                 <th>ngày</th>
-                <th>Số bệnh nhân</th>
+                <th>Số thuốc</th>
                   <th></th>
                   <th></th>
                   <th></th>
@@ -156,11 +156,11 @@
           {% endfor %}
 
           new Chart(ctx, {
-            type: 'bar',
+            type: 'line',
             data: {
               labels: labels,
               datasets: [{
-                label: '# Số bệnh nhân',
+                label: '# Số Thuốc',
                 data: {{data}},
                 borderWidth: 1,
                 backgroundColor: ['red', 'green', 'blue', 'gold', 'brown']
