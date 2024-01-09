@@ -29,11 +29,11 @@
             <div class="col">
               <label class="form-label font-weight-bold">Giới tính</label>
                 <div class="row mt-2">
-                    <div class="form-check mr-5 ml-5">
+                    <div class="form-check col">
                       <input type="radio" class="form-check-input" id="radio1" name="gender" value="Nam" checked>
                       <label class="form-check-label" for="radio1">Nam</label>
                     </div>
-                    <div class="form-check">
+                    <div class="form-check col">
                       <input type="radio" class="form-check-input" id="radio2" name="gender" value="Nữ">
                       <label class="form-check-label" for="radio2">Nữ</label>
                     </div>
@@ -74,11 +74,15 @@
 </div>
 <script>
   var originalDate = "{{ patient.date_appointment }}";
-  var formattedDate = new Date(originalDate).toISOString().split('T')[0];
+  var dateObject = new Date(originalDate);
+  dateObject.setDate(dateObject.getDate()+1);
+  var formattedDate = dateObject.toISOString().split('T')[0];
   document.getElementById('date_appointment').value = formattedDate;
 
   var originalBirth = "{{ patient.date_of_birth }}";
-  var formattedBirth = new Date(originalBirth).toISOString().split('T')[0];
+  var birthObject = new Date(originalBirth);
+  birthObject.setDate(birthObject.getDate()+1);
+  var formattedBirth = birthObject.toISOString().split('T')[0];
   document.getElementById('birth').value = formattedBirth;
 </script>
 {% endblock %}

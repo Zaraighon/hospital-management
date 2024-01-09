@@ -1,5 +1,5 @@
 from app import app, db
-from app.models import User, UserRoleEnum,Patient
+from app.models import User, UserRoleEnum,Patient,Receipt
 import hashlib
 
 
@@ -17,6 +17,12 @@ def add_appointment(name,gender, date_appointment, date_of_birth, address, disea
     db.session.add(patient_appointment)
     db.session.commit()
 
+
+#lưu hóa đơn
+def add_receipt(medical_report_id,price):
+    receipt = Receipt(medical_report_id=medical_report_id,price=price)
+    db.session.add(receipt)
+    db.session.commit()
 
 def check_userlogin(username, password,):
     if username and password:

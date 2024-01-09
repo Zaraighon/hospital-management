@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
-from app.models import Medicine, UserRoleEnum, Patient, MedicalReport, Prescription
+from app.models import Medicine, UserRoleEnum, Patient, MedicalReport, Prescription,Rule
 import dao
-
 from app import app, db, utils, login, form
 from flask_login import login_user, logout_user, login_required, current_user
 
@@ -67,6 +66,7 @@ def user_register():
 def nurse_appointment_list():
     # CHECK ROLE Y TÁ
     if current_user.user_role == UserRoleEnum.NURSE:
+
         if request.method.__eq__('GET'):
             selected_date = request.args.get('selected_date')
             patients = Patient.query.filter_by(date_appointment=selected_date).all()
@@ -74,38 +74,56 @@ def nurse_appointment_list():
     else:
         return redirect(url_for('index'))
 
+@app.route('/receipt-list', methods=['get'])
+def cashier_receipt_list():
+    if current_user.user_role == UserRoleEnum.CASHIER:
+        if request.method.__eq__('GET'):
+            selected_date = request.args.get('selected_date')
+            patients = Patient.query.filter_by(date_appointment=selected_date).all()
+            medical_reports = MedicalReport.query.filter_by(date_examination=selected_date)
+        return render_template('cashier/receipt.html', UserRoleEnum=UserRoleEnum, selected_date=selected_date,patients=patients, medical_reports=medical_reports)
+    else:
+        return redirect(url_for('index'))
+
+@app.route('/receipt-list/export/<int:id>', methods=['get','post'])
+def export_receipt(id):
+    if current_user.user_role == UserRoleEnum.CASHIER:
+        patient = Patient.query.get_or_404(id)
+        medical_report = MedicalReport.query.filter_by(id=patient.id).first()
+        prescriptions = Prescription.query.filter_by(medical_report_id=medical_report.id).all()
+        medicines=[]
+        for prescription in prescriptions:
+            medicine = Medicine.query.filter_by(id=prescription.medicine_id).first()
+            if medicine:
+                medicines.append(medicine)
+        return render_template('cashier/export-receipt.html', patient=patient, medical_report=medical_report, prescriptions=prescriptions, medicines=medicines, UserRoleEnum=UserRoleEnum)
+
 
 @app.route('/appointment-list/edit/<int:id>', methods=['get', 'post'])
 def nurse_edit_appointment(id):
     if current_user.user_role == UserRoleEnum.NURSE:
         patient = Patient.query.get_or_404(id)
+        before_edit_date = patient.date_appointment
         if request.method.__eq__('POST'):
             patient.name = request.form.get('name')
-            patient.gender = request.form.get('name')
+            patient.gender = request.form.get('gender')
             patient.date_appointment = request.form.get('date_appointment')
             patient.date_of_birth = request.form.get('date_of_birth')
             patient.address = request.form.get('address')
             patient.disease_history = request.form.get('disease_history')
             patient.tel = request.form.get('tel')
             db.session.commit()
-            return redirect(url_for('nurse_appointment_list', UserRoleEnum=UserRoleEnum))
-            flash('Chỉnh sửa bệnh nhân thành công')
-        # form.name.data = patient.name
-        # form.gender = patient.gender
-        # form.date_appointment = patient.date_appointment
-        # form.date_of_birth = patient.date_of_birth
-        # form.address = patient.address
-        # form.disease_history = patient.disease_history
+            return redirect(url_for('nurse_appointment_list',UserRoleEnum=UserRoleEnum, selected_date = before_edit_date))
         return render_template('nurse/update_appointment.html', patient=patient,UserRoleEnum=UserRoleEnum)
 
 @app.route('/appointment-list/delete/<int:id>')
 def nurse_delete_appointment(id):
     patient = Patient.query.get_or_404(id)
-
+    deleted_date = patient.date_appointment
     try:
         db.session.delete(patient)
         db.session.commit()
-        return redirect('/appointment-list')
+        return redirect(url_for('nurse_appointment_list',UserRoleEnum=UserRoleEnum, selected_date = deleted_date))
     except:
         return 'Có lỗi xảy ra khi xóa'
 
@@ -147,6 +165,7 @@ def user_appointment():
     # check role bệnh nhân
     err_msg = ""
     sc_msg = ""
+    patient_per_date = Rule.query.filter_by(rule_name='Patient per day').first()
     if current_user.user_role == UserRoleEnum.PATIENT:
         if request.method.__eq__('POST'):
             name = request.form.get('name')
@@ -159,7 +178,7 @@ def user_appointment():
 
             try:
                 count = Patient.query.filter_by(date_appointment=date_appointment).count()
-                if count == 10 or count > 10:
+                if count == patient_per_date or count > patient_per_date:
                     err_msg = 'Ngày đăng ký khám đã hết chỗ'
                     return render_template('patient/update_appointment.html', err_msg=err_msg, UserRoleEnum=UserRoleEnum)
                 utils.add_appointment(name=name, gender=gender, date_appointment=date_appointment,
