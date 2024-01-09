@@ -95,6 +95,7 @@ class Prescription(db.Model):
     medical_report_id = Column(Integer, ForeignKey(MedicalReport.id), primary_key=True)
     medicine_id = Column(Integer, ForeignKey(Medicine.id), primary_key=True)
     count = Column(Integer, nullable=False)
+    created_date = Column(DateTime, default=datetime.now())
 
 
 class Receipt(BaseModel):
@@ -127,7 +128,7 @@ if __name__ == '__main__':
         #
         # db.session.add_all([u, p, n, d, c])
         # db.session.commit()
-
+# ------THUỐC------
         # a1 = Medicine(medicine_name='Paramol', how_to_use='Trị các bệnh về đau đầu và hạ sốt',
         #          price=('20000'), unit_name='vĩ')
         # a2 = Medicine(medicine_name='Paracetamol 500mg', how_to_use='Thuốc giảm đau hạ sốt hiệu quả',
@@ -153,5 +154,21 @@ if __name__ == '__main__':
         # db.session.add_all([a1, a2, a3, a4, a5, a6, a7, a8, a9, a10])
         # db.session.commit()
 
+# -------ĐƠN THUỐC--------
+        # a11 = Prescription(medical_report_id='1', medicine_id='2',
+        #               count=('33'),created_date=('2024-03-09'))
+        # a12 = Prescription(medical_report_id='1', medicine_id='5',
+        #                count=('11'), created_date=('2024-03-09'))
+        # a13 = Prescription(medical_report_id='1', medicine_id='7',
+        #                count=('2'), created_date=('2024-03-09'))
+        # a14 = Prescription(medical_report_id='2', medicine_id='3',
+        #                count=('22'), created_date=('2024-03-11'))
+        # a15 = Prescription(medical_report_id='2', medicine_id='8',
+        #                count=('6'), created_date=('2024-03-10'))
+        # a16 = Prescription(medical_report_id='2', medicine_id='10',
+        #                count=('5'), created_date=('2024-03-9'))
+        #
+        # db.session.add_all([a11, a12, a13, a14, a15, a16])
+        # db.session.commit()
 
 

@@ -105,19 +105,93 @@
   </nav>
 
   <div class="content-container">
-    <h1 style="color:#3d9bff;">Trang quản trị phòng mạch</h1>
+<!--    <h1 style="color:#3d9bff;">Trang quản trị phòng mạch</h1>-->
 
-      {% if err_msg %}
-                        <div class="alert alert-danger">
-                            <h6>{{ err_msg }}</h6>
-                        </div>
-                    {% endif %}
-          {% if current_user.is_authenticated %}
-          <a class="nav-link" href="{{ url_for('index') }}" style="color:#3d9bff">
-            Xin chào, {{ current_user.name }}
-          </a>
+<!--      {% if err_msg %}-->
+<!--                        <div class="alert alert-danger">-->
+<!--                            <h6>{{ err_msg }}</h6>-->
+<!--                        </div>-->
+<!--                    {% endif %}-->
+<!--          {% if current_user.is_authenticated %}-->
+<!--          <a class="nav-link" href="{{ url_for('index') }}" style="color:#3d9bff">-->
+<!--            Xin chào, {{ current_user.name }}-->
+<!--          </a>-->
 
+      <h1 class="text-center text-info">THỐNG KÊ BÁO CÁO DOANH THU THEO THÁNG 3</h1>
 
+        <div class="row">
+          <div class="col-md-5 col-xs-12">
+            <table class="table">
+              <tr>
+                <th>NGÀY</th>
+                <th>SỐ TIỀN</th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+              </tr>
+<!--              {% for s in date_chart %}-->
+<!--              <tr>-->
+<!--                <td>{{ s[0] }}</td>-->
+<!--              </tr>-->
+<!--              {% endfor %}-->
+<!--                {% for s in data %}-->
+<!--              <tr>-->
+<!--                <td>{{ s[0] }}</td>-->
+<!--              </tr>-->
+<!--              {% endfor %}-->
+            </table>
+          </div>
+          <div class="col-md-7 col-xs-12">
+            <canvas id="myChart"></canvas>
+          </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+          <script>
+    // Lấy dữ liệu từ route Flask
+    var days = {{ days | safe }};
+    var revenues = {{ revenues | safe }};
+    var year = {{ year | safe }};
+    var month = {{ month | safe }};
+
+    // Lấy đối tượng canvas từ HTML
+    var ctx = document.getElementById('myChart').getContext('2d');
+
+    // Tạo một đối tượng biểu đồ mới
+    var myChart = new Chart(ctx, {
+      // Chọn loại biểu đồ là đường
+      type: 'line',
+      // Định nghĩa dữ liệu cho biểu đồ
+      data: {
+        // Nhãn cho trục x là các ngày trong tháng
+        labels: days,
+        // Dữ liệu cho trục y là doanh thu theo ngày
+        datasets: [{
+          label: 'Doanh thu (triệu đồng)',
+          data: revenues,
+          // Màu nền cho đường biểu đồ
+          backgroundColor: 'rgba(0, 0, 255, 0.1)',
+          // Màu viền cho đường biểu đồ
+          borderColor: 'rgba(0, 0, 255, 1)',
+          // Độ rộng của viền
+          borderWidth: 2
+        }]
+      },
+      // Định nghĩa các tùy chọn cho biểu đồ
+      options: {
+        // Hiển thị tiêu đề cho biểu đồ
+        title: {
+          display: true,
+          text: 'Biểu đồ doanh thu tháng ' + month + ' năm ' + year
+        },
+        // Hiển thị lưới cho trục x và y
+        scales: {
+
+        }
+      }
+    });
+  </script>
       {% else %}
             <div class="row">
                 <div class="col-md-6 offset-md-3">

@@ -77,7 +77,10 @@
             <a class="nav-link" href="/admin">Trang chủ</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/admin/tkbc">Thống kê</a>
+            <a class="nav-link" href="/admin/tkbc">Thống kê số lượng thuốc đã dùng</a>
+          </li>
+            <li class="nav-item">
+            <a class="nav-link" href="/admin/tkdt">Thống kê doanh thu tháng 3</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="javascript:void(0)">Thay đổi quy định</a>
@@ -114,29 +117,29 @@
 <!--            Xin chào, {{ current_user.name }}-->
 <!--          </a>-->
 
-      <h1 class="text-center text-info">THỐNG KÊ BÁO CÁO</h1>
+      <h1 class="text-center text-info">THỐNG KÊ BÁO CÁO SỐ THUỐC ĐÃ SỬA DỤNG TRONG THÁNG 3</h1>
 
         <div class="row">
           <div class="col-md-5 col-xs-12">
             <table class="table">
               <tr>
-                <th>ngày</th>
-                <th>Số thuốc</th>
+                <th>NGÀY</th>
+                <th>TỔNG SỐ LƯỢNG THUỐC ĐÃ DÙNG</th>
                   <th></th>
                   <th></th>
                   <th></th>
                   <th></th>
-              </tr>
-              {% for s in date_chart %}
-              <tr>
-                <td>{{ s[0] }}</td>
-              </tr>
-              {% endfor %}
-                {% for s in data %}
-              <tr>
-                <td>{{ s[0] }}</td>
-              </tr>
-              {% endfor %}
+<!--              </tr>-->
+<!--              {% for s in date_chart %}-->
+<!--              <tr>-->
+<!--                <td>{{ s[0] }}</td>-->
+<!--              </tr>-->
+<!--              {% endfor %}-->
+<!--                {% for s in data %}-->
+<!--              <tr>-->
+<!--                <td>{{ s[0] }}</td>-->
+<!--              </tr>-->
+<!--              {% endfor %}-->
             </table>
           </div>
           <div class="col-md-7 col-xs-12">
@@ -146,36 +149,58 @@
 
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script>
-        window.onload = function() {
-          const ctx = document.getElementById('myChart');
+    // Lấy dữ liệu từ route Flask
+    var days = {{ days | safe }};
+    var counts = {{ counts | safe }};
+    var year = {{ year | safe }};
+    var month = {{ month | safe }};
 
-          let labels = [];
+    // Lấy đối tượng canvas từ HTML
+    var ctx = document.getElementById('myChart').getContext('2d');
 
-          {% for s in date_chart %}
-          labels.push('{{ s[0] }}')
-          {% endfor %}
-
-          new Chart(ctx, {
-            type: 'line',
-            data: {
-              labels: labels,
-              datasets: [{
-                label: '# Số Thuốc',
-                data: {{data}},
-                borderWidth: 1,
-                backgroundColor: ['red', 'green', 'blue', 'gold', 'brown']
-              }]
-            },
-            options: {
-              scales: {
-                y: {
-                  beginAtZero: true
-                }
-              }
+    // Tạo một đối tượng biểu đồ mới
+    var myChart = new Chart(ctx, {
+      // Chọn loại biểu đồ là đường
+      type: 'bar',
+      // Định nghĩa dữ liệu cho biểu đồ
+      data: {
+        // Nhãn cho trục x là các ngày trong tháng
+        labels: days,
+        // Dữ liệu cho trục y là số thuốc đã sử dụng theo ngày
+        datasets: [{
+          label: 'Số thuốc đã sử dụng (viên, vĩ, chai)',
+          data: counts.map(Number),
+          // Màu nền cho đường biểu đồ
+          backgroundColor: 'rgba(0, 0, 255, 0.1)',
+          // Màu viền cho đường biểu đồ
+          borderColor: 'rgba(0, 0, 255, 1)',
+          // Độ rộng của viền
+          borderWidth: 2
+        }]
+      },
+      // Định nghĩa các tùy chọn cho biểu đồ
+      options: {
+        // Hiển thị tiêu đề cho biểu đồ
+        title: {
+          display: true,
+          text: 'Biểu đồ số thuốc đã sử dụng tháng ' + month + ' năm ' + year
+        },
+        // Hiển thị lưới cho trục x và y
+        scales: {
+          xAxes: [{
+            gridLines: {
+              display: true
             }
-          });
+          }],
+          yAxes: [{
+            gridLines: {
+              display: true
+            }
+          }]
         }
-        </script>
+      }
+    });
+  </script>
       {% else %}
             <div class="row">
                 <div class="col-md-6 offset-md-3">
