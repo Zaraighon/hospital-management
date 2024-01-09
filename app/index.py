@@ -237,15 +237,15 @@ def user_appointment():
                 count = Patient.query.filter_by(date_appointment=date_appointment).count()
                 if count == patient_per_date or count > patient_per_date:
                     err_msg = 'Ngày đăng ký khám đã hết chỗ'
-                    return render_template('patient/update_appointment.html', err_msg=err_msg, UserRoleEnum=UserRoleEnum)
+                    return render_template('patient/appointment.html', err_msg=err_msg, UserRoleEnum=UserRoleEnum)
                 utils.add_appointment(name=name, gender=gender, date_appointment=date_appointment,
                                       date_of_birth=date_of_birth, address=address, disease_history=disease_history, tel=tel)
             except Exception as ex:
                 err_msg = 'Đăng ký khám không thành công' + str(ex)
             else:
                 sc_msg = 'Đăng ký khám thành công'
-                return render_template('patient/update_appointment.html', sc_msg=sc_msg, UserRoleEnum=UserRoleEnum)
-        return render_template('patient/update_appointment.html', err_msg=err_msg, UserRoleEnum=UserRoleEnum)
+                return render_template('patient/appointment.html', sc_msg=sc_msg, UserRoleEnum=UserRoleEnum)
+        return render_template('patient/appointment.html', err_msg=err_msg, UserRoleEnum=UserRoleEnum)
     else:
         return redirect(url_for('index'))
 
