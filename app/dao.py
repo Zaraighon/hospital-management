@@ -41,12 +41,13 @@ def insert_medicine():
 
 
 def date_chart():
-    return db.session.query(distinct(Patient.date_appointment)).order_by(Patient.date_appointment).all()
+    return db.session.query(distinct(Medicine.created_date)).order_by(Medicine.created_date).all()
 
 def count_patients_by_date():
-    # Sử dụng hàm func.count() để đếm số bệnh nhân
-    # Sử dụng hàm func.date() để lấy phần ngày từ date_appointment
+    # Sử dụng hàm func.count() để đếm số thuốc
+    # Sử dụng hàm func.date() để lấy phần ngày từ createed_date
     # Sử dụng hàm group_by() để nhóm theo ngày
     # Sử dụng hàm order_by() để sắp xếp theo ngày
-    result = db.session.query(func.date(Patient.date_appointment), func.count(Patient.id)).group_by(func.date(Patient.date_appointment)).order_by(func.date(Patient.date_appointment)).all()
+    result = (db.session.query(func.date(Medicine.created_date), func.count(Medicine.id)).group_by(func.date(Medicine.created_date))
+              .order_by(func.date(Medicine.created_date)).all())
     return result
